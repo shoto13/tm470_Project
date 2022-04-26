@@ -25,7 +25,7 @@ driver.get('https://flagstoneprojects.com')
 # search.send_keys("mario")
 # search.send_keys(Keys.RETURN)
 
-a = 3
+a = 2
 
 if a == 1:
     try:
