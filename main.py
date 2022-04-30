@@ -13,11 +13,12 @@ from tkinter import *
 
 
 ## FUNCTIONS ##
+
 # LOAD URL FUNCTION
 def url_button_clicked():
-    # ADD HTTP PREFIX TO ENTERED URL SO THAT IT RUNS CORRECTLY
+    # ADD HTTPS PREFIX TO ENTERED URL
     url = 'https://' + urlString.get()
-    msg = f'Your entered URL was: {url}'
+    msg = f'Your entered URL {url} has been displayed'
 
     driver.get(url)
     showinfo(
@@ -38,7 +39,7 @@ def flip_page_180():
 
 
 # CHANGE FONT COLOUR
-def make_text_red():
+def colour_text_red():
     try:
         elem1 = driver.find_element(By.TAG_NAME, 'body')
         print("done that")
@@ -111,26 +112,39 @@ def make_text_red():
         print('could not find that')
 
 
+
 # CHANGE FONT SIZE
-def make_text_larger():
+def zoom_page():
     try:
-        elem20 = driver.find_element(By.TAG_NAME, 'p')
-        driver.execute_script("arguments[0].style.font-size='20px';", elem20)
-        print('Found <%s> element with that class name!' % (elem20.tag_name))
+        driver.execute_script("document.body.style.zoom='150%'")
+
+        # elem20 = driver.find_element(By.CSS_SELECTOR, '*')
+        # print('found the element')
+        # driver.execute_script("arguments[0].style.font-size='20px';", elem20)
+        # print('Found <%s> element with that class name!' % (elem20.tag_name))
     except:
         print('could not find that')
+
+
 
 
 # DISABLE JAVASCRIPT
 def disable_js():
     try:
-        elem1 = driver.find_element(By.TAG_NAME, 'html')
+        elem1 = driver.find_element(By.CSS_SELECTOR, 'html')
         print("done that")
         driver.execute_script("arguments[0].style.font-weight='bold';", elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
         print('could not find that')
 
+def dl_page_source():
+    try:
+        # something
+        a = 1
+    except:
+        # something
+        a = 2
 
 
 # DOWNLOAD WEB PAGE TO FILE
@@ -154,28 +168,28 @@ urlEntry.pack(fill='x', expand=True)
 urlEntry.focus()
 
 
-#URL RUN BUTTON
+# URL RUN BUTTON
 urlButton = ttk.Button(window, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=10)
 
-#FLIP PAGE BUTTON
+# FLIP PAGE BUTTON
 flipButton = ttk.Button(window, text="Flip page 180", command=flip_page_180)
 flipButton.pack(fill='x', expand=True, pady=10)
 
 # FONT COLOUR BUTTON
-recolourButton = ttk.Button(window, text="Recolour text", command=make_text_red)
+recolourButton = ttk.Button(window, text="Recolour text", command=colour_text_red)
 recolourButton.pack(fill='x', expand=True, pady=10)
 
 # FONT SIZE BUTTON
-resizeButton = ttk.Button(window, text="Change font size", command=make_text_larger)
+resizeButton = ttk.Button(window, text="Zoom page", command=zoom_page)
 resizeButton.pack(fill='x', expand=True, pady=10)
 
 # DISABLE JS BUTTON
-disableJsButton = ttk.Button(window, text="Disable JavaScript", command=make_text_red())
+disableJsButton = ttk.Button(window, text="Disable JavaScript", command=disable_js)
 disableJsButton.pack(fill='x', expand=True, pady=10)
 
 # DOWNLOAD PAGE TO FILE
-downloadPageButton = ttk.Button(window, text="Download page source", command=make_text_red)
+downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
 downloadPageButton.pack(fill='x', expand=True, pady=10)
 
 
