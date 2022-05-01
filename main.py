@@ -110,7 +110,7 @@ def colour_text_red():
 
 
 
-# CHANGE FONT SIZE
+# ZOOM PAGE
 def zoom_page():
     global zoom
     zoom = zoom + 0.1
