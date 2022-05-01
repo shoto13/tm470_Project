@@ -11,7 +11,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
 
-
+zoom = 1.0
 ## FUNCTIONS ##
 
 # LOAD URL FUNCTION
@@ -35,57 +35,52 @@ def flip_page_180():
         driver.execute_script("arguments[0].style.transform ='rotate(180deg)';", elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
-        print('could not find that ')
+        print('could not find that element')
 
 
 # CHANGE FONT COLOUR
 def colour_text_red():
     try:
         elem1 = driver.find_element(By.TAG_NAME, 'body')
-        print("done that")
         driver.execute_script("arguments[0].style.color='red';", elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
         elem2 = driver.find_elements(By.TAG_NAME, 'p')
-
         for element in elem2:
             driver.execute_script("arguments[0].style.color='red';", element)
         print('Found <%s> element with that class name!' % (elem2.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
         elem3 = driver.find_element(By.TAG_NAME, 'h1')
-        print("done that")
         driver.execute_script("arguments[0].style.color='red';", elem3)
         print('Found <%s> element with that class name!' % (elem3.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
         elem4 = driver.find_elements(By.TAG_NAME, 'h2')
-
         for element in elem4:
             driver.execute_script("arguments[0].style.color='red';", element)
         print('Found <%s> element with that class name!' % (elem4.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
         elem5 = driver.find_elements(By.TAG_NAME, 'iframe')
         for element in elem5:
             driver.execute_script("arguments[0].style.color='red';", element)
-
         print('Found <%s> element with that class name!' % (elem5.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
@@ -94,36 +89,35 @@ def colour_text_red():
             driver.execute_script("arguments[0].style.color='red';", element)
         print('Found <%s> element with that class name!' % (elem6.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
     try:
         elem7 = driver.find_elements(By.TAG_NAME, 'div')
         for element in elem7:
             driver.execute_script("arguments[0].style.color='red';", element)
+        print('Found <%s> element with that class name!' % (elem7.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
     try:
         elem8 = driver.find_elements(By.TAG_NAME, 'a')
         for element in elem8:
             driver.execute_script("arguments[0].style.color='red';", element)
+        print('Found <%s> element with that class name!' % (elem8.tag_name))
     except:
-        print('could not find that')
+        print('could not find that element')
 
 
 
 # CHANGE FONT SIZE
 def zoom_page():
+    global zoom
+    zoom = zoom + 0.1
     try:
-        driver.execute_script("document.body.style.zoom='150%'")
-
-        # elem20 = driver.find_element(By.CSS_SELECTOR, '*')
-        # print('found the element')
-        # driver.execute_script("arguments[0].style.font-size='20px';", elem20)
-        # print('Found <%s> element with that class name!' % (elem20.tag_name))
+        driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
-        print('could not find that')
+        print('Zooming unsuccessful')
 
 
 
