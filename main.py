@@ -130,8 +130,6 @@ def zoom_page_out():
         print('Zooming unsuccessful')
 
 
-
-
 # DISABLE JAVASCRIPT
 def disable_js():
     try:
@@ -203,6 +201,15 @@ disableJsButton.pack(fill='x', expand=True, pady=10)
 # DOWNLOAD PAGE TO FILE
 downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
 downloadPageButton.pack(fill='x', expand=True, pady=10)
+
+##NEW BUTTONS
+#REMOVE IMAGES
+disableImagesButton = ttk.Button(window, text="Disable Images", command=disable_js)
+disableImagesButton.pack(fill='x', expand=True, pady=10)
+
+#CHANGE BACKGROUND COLOURS
+changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=disable_js)
+changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 
 
 
