@@ -5,6 +5,7 @@ from tkinter import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.webdriver.chrome.options import Options
 import time
 import tkinter as tk
 from tkinter import ttk
@@ -109,11 +110,20 @@ def colour_text_red():
         print('could not find that element')
 
 
-
 # ZOOM PAGE
 def zoom_page():
     global zoom
     zoom = zoom + 0.1
+    try:
+        driver.execute_script("document.body.style.zoom='%s';" % zoom)
+    except:
+        print('Zooming unsuccessful')
+
+
+# ZOOM PAGE OUT
+def zoom_page_out():
+    global zoom
+    zoom = zoom - 0.1
     try:
         driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
@@ -125,20 +135,24 @@ def zoom_page():
 # DISABLE JAVASCRIPT
 def disable_js():
     try:
-        elem1 = driver.find_element(By.CSS_SELECTOR, 'html')
-        print("done that")
-        driver.execute_script("arguments[0].style.font-weight='bold';", elem1)
-        print('Found <%s> element with that class name!' % (elem1.tag_name))
+        print('tried nothing')
+
     except:
         print('could not find that')
 
+
 def dl_page_source():
     try:
-        # something
-        a = 1
+        dfile = open("psDown.html", "w")
+        dfile.write(driver.page_source)
+        showinfo(
+            title='Information',
+            message='The page source was downloaded'
+        )
+
     except:
-        # something
-        a = 2
+        print('could not download page source')
+
 
 
 # DOWNLOAD WEB PAGE TO FILE
@@ -174,8 +188,12 @@ flipButton.pack(fill='x', expand=True, pady=10)
 recolourButton = ttk.Button(window, text="Recolour text", command=colour_text_red)
 recolourButton.pack(fill='x', expand=True, pady=10)
 
-# FONT SIZE BUTTON
-resizeButton = ttk.Button(window, text="Zoom page", command=zoom_page)
+# ZOOM PAGE IN
+resizeButton = ttk.Button(window, text="Zoom page in", command=zoom_page)
+resizeButton.pack(fill='x', expand=True, pady=10)
+
+# ZOOM PAGE OUT
+resizeButton = ttk.Button(window, text="Zoom page out", command=zoom_page_out)
 resizeButton.pack(fill='x', expand=True, pady=10)
 
 # DISABLE JS BUTTON
@@ -198,14 +216,6 @@ driver = webdriver.Chrome(
 
 window.mainloop()
 
-#
-# ffile = open("intecc.html", "w")
-#
-# #WRITE THE PAGE SOURCE TO A NEW DOC
-# if False:
-#     try:
-#         ffile.write(driver.page_source)
-#     except:
-#         print('could not find that')
+
 
 
