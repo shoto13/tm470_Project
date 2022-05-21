@@ -1,5 +1,5 @@
 #TM470 Project
-
+import selenium
 from selenium import webdriver
 from tkinter import *
 from selenium.webdriver.common.by import By
@@ -12,6 +12,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
 
+#SET STANDARD ZOOM
 zoom = 1.0
 ## FUNCTIONS ##
 
@@ -133,7 +134,12 @@ def zoom_page_out():
 # DISABLE JAVASCRIPT
 def disable_js():
     try:
-        print('tried nothing')
+        action = ActionChains(driver)
+
+        action.key_down(Keys.ALT).key_down(Keys.SHIFT).send_keys('j').key_up(Keys.ALT).key_up(Keys.SHIFT)
+        # action.key_up(Keys.ALT).key_up(Keys.SHIFT).perform()
+
+        print('Sent the commands to disable/enable JS')
 
     except:
         print('could not find that')
@@ -212,8 +218,18 @@ changeBackgroundButton = ttk.Button(window, text="Change Background colour", com
 changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 
 
+#ADD JS DISABLING EXTENSION TO OUR BROWSER
+#chrome_options = webdriver.ChromeOptions()
+chrome_options = Options()
+chrome_options.add_extension('/home/vxv/.config/google-chrome/Default/Extensions/cidlcjdalomndpeagkjpnefhljffbnlo/2.0_0.crx')
+# desired_cap = chrome_options.to_capabilities()
+# desired_cap.update({
+#     'browser': 'chrome',
+#     'os': 'Linux',
+#     'os_version': '10'
+# })
 
-chrome_options = webdriver.ChromeOptions()
+
 PATH = "/home/vxv/chromedriver"
 driver = webdriver.Chrome(
     executable_path=PATH,
