@@ -169,6 +169,7 @@ def toggle_js():
         #Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable JS')
+        print('disable javascript: ' + str(disablejs))
 
     except:
         print('could not find that')
@@ -203,6 +204,7 @@ def toggle_images():
         # Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable Images')
+        print('disable images: ' + str(disableimages))
 
     except:
         print('could not find that')
@@ -283,15 +285,30 @@ changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 chrome_options = Options()
 
 def chrome_options_set():
+
+    # if disablejs:
+    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2,
+    #                                                      'profile.managed_default_content_settings.images': 1})
+    # elif disablejs and disableimages:
+    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2,
+    #                                                      'profile.managed_default_content_settings.images': 2})
+    # elif disableimages:
+    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1,
+    #                                                      'profile.managed_default_content_settings.images': 2})
+    # else:
+    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1,
+    #                                                      'profile.managed_default_content_settings.images': 1})
+
+
     if disablejs:
         chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
     else:
         chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
 
-    # if disableimages:
-    #     chrome_options.add_experimental_option("prefs2", {'profile.managed_default_content_settings.images': 2})
-    # else:
-    #     chrome_options.add_experimental_option("prefs2", {'profile.managed_default_content_settings.images': 1})
+    if disableimages:
+        chrome_options.add_argument('--blink-settings=imagesEnabled=false')
+    else:
+        chrome_options.add_argument('--blink-settings=imagesEnabled=true')
 
 
 PATH = "/home/vxv/chromedriver"
