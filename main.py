@@ -12,6 +12,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
 import re
+import js2py
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -42,7 +43,6 @@ def url_button_clicked():
 def flip_page_180():
     try:
         elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
-        print("done that")
         driver.execute_script("arguments[0].style.transform ='rotate(180deg)';", elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
@@ -222,15 +222,40 @@ def dl_page_source():
     except:
         print('could not download page source')
 
+def change_bg_colour():
+    try:
+        elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
+        driver.execute_script("arguments[0].style.backgroundColor ='blue';", elem1)
+        print("That seems to have worked to be honest")
 
+    except:
+        print("That didn't work at all")
 
-# DOWNLOAD WEB PAGE TO FILE
+def block_adverts():
+    try:
+        all_iframes = driver.find_elements_by_tag_name("iframe")
+        if len(all_iframes) > 0:
+            print("Ad Found\n")
+            driver.execute_script("""
+                var elems = document.getElementsByTagName("iframe"); 
+                for(var i = 0, max = elems.length; i < max; i++)
+                     {
+                         elems[i].hidden=true;
+                     }
+                                  """)
+            print('Total Ads: ' + str(len(all_iframes)))
+        else:
+            print('No frames found')
+
+    except:
+        print("That did not work for some reason")
+
 
 
 # GUI SETUP
 window = tk.Tk()
 
-window.geometry('500x500')
+window.geometry('500x700')
 window.resizable(False, False)
 window.title('TM470 application test')
 
@@ -278,27 +303,17 @@ disableImagesButton = ttk.Button(window, text="Toggle page images On/Off", comma
 disableImagesButton.pack(fill='x', expand=True, pady=10)
 
 #CHANGE BACKGROUND COLOURS
-changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=toggle_js)
+changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=change_bg_colour)
 changeBackgroundButton.pack(fill='x', expand=True, pady=10)
+
+#BLOCK ADVERTS
+blockAdsButton = ttk.Button(window, text="Block Adverts", command=block_adverts)
+blockAdsButton.pack(fill='x', expand=True, pady=10)
 
 
 chrome_options = Options()
 
 def chrome_options_set():
-
-    # if disablejs:
-    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2,
-    #                                                      'profile.managed_default_content_settings.images': 1})
-    # elif disablejs and disableimages:
-    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2,
-    #                                                      'profile.managed_default_content_settings.images': 2})
-    # elif disableimages:
-    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1,
-    #                                                      'profile.managed_default_content_settings.images': 2})
-    # else:
-    #     chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1,
-    #                                                      'profile.managed_default_content_settings.images': 1})
-
 
     if disablejs:
         chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
