@@ -11,15 +11,24 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
+import re
 
 #SET STANDARD ZOOM
 zoom = 1.0
+
+disablejs = False
+disableimages = False
+
 ## FUNCTIONS ##
 
 # LOAD URL FUNCTION
 def url_button_clicked():
-    # ADD HTTPS PREFIX TO ENTERED URL
-    url = 'https://' + urlString.get()
+    url = urlString.get()
+
+    #make sure URL has correct prefix
+    if not url.startswith(('http://', 'https://')):
+        url = 'https://' + urlString.get()
+
     msg = f'Your entered URL {url} has been displayed'
 
     driver.get(url)
@@ -131,15 +140,69 @@ def zoom_page_out():
         print('Zooming unsuccessful')
 
 
-# DISABLE JAVASCRIPT
-def disable_js():
+# DISABLE/ENABLE JAVASCRIPT
+def toggle_js():
     try:
-        action = ActionChains(driver)
 
-        action.key_down(Keys.ALT).key_down(Keys.SHIFT).send_keys('j').key_up(Keys.ALT).key_up(Keys.SHIFT)
-        # action.key_up(Keys.ALT).key_up(Keys.SHIFT).perform()
+        # Global functions to let us work with driver from within our functions
+        global disablejs
+        global driver
 
+        # Switch disablejs boolean without knowing its value
+        disablejs = not disablejs
+        msg = "Restarting the browser with updated JavaScript settings"
+
+        # Close - BUT DO NOT KILL - driver so that we can update chrome options.
+        driver.close()
+        chrome_options_set()
+
+        driver = webdriver.Chrome(
+            executable_path=PATH,
+            chrome_options=chrome_options
+        )
+
+        showinfo(
+            title='Information',
+            message=msg
+        )
+
+        #Re-get the URL
+        url_button_clicked()
         print('Sent the commands to disable/enable JS')
+
+    except:
+        print('could not find that')
+
+
+# DISABLE/ENABLE IMAGES
+def toggle_images():
+    try:
+
+        # Global functions to let us work with driver from within our functions
+        global disableimages
+        global driver
+
+        # Switch disableimages boolean without knowing its value
+        disableimages = not disableimages
+        msg = "Restarting the browser with updated Image display settings"
+
+        # Close - BUT DO NOT KILL - driver so that we can update chrome options.
+        driver.close()
+        chrome_options_set()
+
+        driver = webdriver.Chrome(
+            executable_path=PATH,
+            chrome_options=chrome_options
+        )
+
+        showinfo(
+            title='Information',
+            message=msg
+        )
+
+        # Re-get the URL
+        url_button_clicked()
+        print('Sent the commands to disable/enable Images')
 
     except:
         print('could not find that')
@@ -201,36 +264,38 @@ resizeButton = ttk.Button(window, text="Zoom page out", command=zoom_page_out)
 resizeButton.pack(fill='x', expand=True, pady=10)
 
 # DISABLE JS BUTTON
-disableJsButton = ttk.Button(window, text="Disable JavaScript", command=disable_js)
-disableJsButton.pack(fill='x', expand=True, pady=10)
+toggleJsButton = ttk.Button(window, text="Toggle JavaScript On/Off", command=toggle_js)
+toggleJsButton.pack(fill='x', expand=True, pady=10)
 
 # DOWNLOAD PAGE TO FILE
 downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
 downloadPageButton.pack(fill='x', expand=True, pady=10)
 
-##NEW BUTTONS
 #REMOVE IMAGES
-disableImagesButton = ttk.Button(window, text="Disable Images", command=disable_js)
+disableImagesButton = ttk.Button(window, text="Toggle page images On/Off", command=toggle_images)
 disableImagesButton.pack(fill='x', expand=True, pady=10)
 
 #CHANGE BACKGROUND COLOURS
-changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=disable_js)
+changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=toggle_js)
 changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 
 
-#ADD JS DISABLING EXTENSION TO OUR BROWSER
-#chrome_options = webdriver.ChromeOptions()
 chrome_options = Options()
-chrome_options.add_extension('/home/vxv/.config/google-chrome/Default/Extensions/cidlcjdalomndpeagkjpnefhljffbnlo/2.0_0.crx')
-# desired_cap = chrome_options.to_capabilities()
-# desired_cap.update({
-#     'browser': 'chrome',
-#     'os': 'Linux',
-#     'os_version': '10'
-# })
+
+def chrome_options_set():
+    if disablejs:
+        chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
+    else:
+        chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
+
+    # if disableimages:
+    #     chrome_options.add_experimental_option("prefs2", {'profile.managed_default_content_settings.images': 2})
+    # else:
+    #     chrome_options.add_experimental_option("prefs2", {'profile.managed_default_content_settings.images': 1})
 
 
 PATH = "/home/vxv/chromedriver"
+
 driver = webdriver.Chrome(
     executable_path=PATH,
     chrome_options=chrome_options
