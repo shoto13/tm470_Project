@@ -11,8 +11,9 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
-import re
-import js2py
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -158,7 +159,7 @@ def toggle_js():
 
         driver = webdriver.Chrome(
             executable_path=PATH,
-            chrome_options=chrome_options
+            chrome_options=options
         )
 
         showinfo(
@@ -193,7 +194,7 @@ def toggle_images():
 
         driver = webdriver.Chrome(
             executable_path=PATH,
-            chrome_options=chrome_options
+            chrome_options=options
         )
 
         showinfo(
@@ -221,6 +222,37 @@ def dl_page_source():
 
     except:
         print('could not download page source')
+
+def display_text_content_exclusive():
+    try:
+        url = 'https://' + urlString.get() +'/'
+        print(url)
+        html = urlopen(url).read()
+        soup = BeautifulSoup(html, features="html.parser")
+
+        # kill all script and style elements
+        for script in soup(["script", "style"]):
+            script.extract()  # rip it out
+
+        # get text
+        text = soup.get_text()
+        # break into lines and remove leading and trailing space on each
+        lines = (line.strip() for line in text.splitlines())
+        # break multi-headlines into a line each
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        # drop blank lines
+        text = '\n'.join(chunk for chunk in chunks if chunk)
+
+        elem1 = driver.find_element(By.TAG_NAME, 'p')
+
+        print(text)
+        #TODO GET THIS WORKING SO THAT THE TEXT CONTENT IS DISPLAYED IN THE WEB BROWSER
+        driver.execute_script('document.body.innerHTML = "{html}";'.format(html=text), elem1)
+
+    except:
+        print('could not download page source')
+
+
 
 def change_bg_colour():
     try:
@@ -298,39 +330,43 @@ toggleJsButton.pack(fill='x', expand=True, pady=10)
 downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
 downloadPageButton.pack(fill='x', expand=True, pady=10)
 
-#REMOVE IMAGES
+# DISPLAY JUST TEXTUAL CONTENT
+textOnlyButton = ttk.Button(window, text="Display page text", command=display_text_content_exclusive)
+textOnlyButton.pack(fill='x', expand=True, pady=10)
+
+# REMOVE IMAGES
 disableImagesButton = ttk.Button(window, text="Toggle page images On/Off", command=toggle_images)
 disableImagesButton.pack(fill='x', expand=True, pady=10)
 
-#CHANGE BACKGROUND COLOURS
+# CHANGE BACKGROUND COLOURS
 changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=change_bg_colour)
 changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 
-#BLOCK ADVERTS
+# BLOCK ADVERTS
 blockAdsButton = ttk.Button(window, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=10)
 
 
-chrome_options = Options()
+options = Options()
 
 def chrome_options_set():
 
     if disablejs:
-        chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
+        options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
     else:
-        chrome_options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
+        options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
 
     if disableimages:
-        chrome_options.add_argument('--blink-settings=imagesEnabled=false')
+        options.add_argument('--blink-settings=imagesEnabled=false')
     else:
-        chrome_options.add_argument('--blink-settings=imagesEnabled=true')
+        options.add_argument('--blink-settings=imagesEnabled=true')
 
 
 PATH = "/home/vxv/chromedriver"
 
 driver = webdriver.Chrome(
     executable_path=PATH,
-    chrome_options=chrome_options
+    options=options
 )
 
 
