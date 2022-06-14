@@ -243,11 +243,14 @@ def display_text_content_exclusive():
         # drop blank lines
         text = '\n'.join(chunk for chunk in chunks if chunk)
 
-        elem1 = driver.find_element(By.TAG_NAME, 'p')
 
-        print(text)
-        #TODO GET THIS WORKING SO THAT THE TEXT CONTENT IS DISPLAYED IN THE WEB BROWSER
-        driver.execute_script('document.body.innerHTML = "{html}";'.format(html=text), elem1)
+        print('We found the items!')
+        # print(text)
+
+        text_file = open("page_content.txt", "w")
+        text_file.write(text)
+        text_file.close()
+
 
     except:
         print('could not download page source')
