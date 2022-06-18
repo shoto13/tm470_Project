@@ -14,6 +14,9 @@ from tkinter import *
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
+#KIVY
+from kivy.app import App
+
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -210,7 +213,7 @@ def toggle_images():
     except:
         print('could not find that')
 
-
+# DOWNLOAD PAGE SOURCE TO FILE
 def dl_page_source():
     try:
         dfile = open("psDown.html", "w")
@@ -223,31 +226,9 @@ def dl_page_source():
     except:
         print('could not download page source')
 
+# DISPLAY THE TEXT CONTENT OF THE WEB PAGE IN A NEW TAB
 def display_text_content_exclusive():
     try:
-        # url = 'https://' + urlString.get() +'/'
-        # print(url)
-        # html = urlopen(url).read()
-        # soup = BeautifulSoup(html, features="html.parser")
-        #
-        # # kill all script and style elements
-        # for script in soup(["script", "style"]):
-        #     script.extract()  # rip it out
-        #
-        # # get text
-        # text = soup.get_text()
-        # # break into lines and remove leading and trailing space on each
-        # lines = (line.strip() for line in text.splitlines())
-        # # break multi-headlines into a line each
-        # chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        # # drop blank lines
-        # text = '\n'.join(chunk for chunk in chunks if chunk)
-        #
-        #
-        # print('We found the items!')
-        # print(text)
-        #
-
 
         elem1 = driver.find_element(By.TAG_NAME, 'body')
         #print(elem1.text)
@@ -262,7 +243,6 @@ def display_text_content_exclusive():
         driver.get('file:///home/vxv/PycharmProjects/tm470_Project/page_content.html')
     except:
         print('could not download page source')
-
 
 
 def change_bg_colour():
