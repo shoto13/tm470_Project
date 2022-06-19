@@ -13,6 +13,8 @@ from tkinter.messagebox import showinfo
 from tkinter import *
 from urllib.request import urlopen
 from ttkthemes import ThemedStyle
+from tkinter.colorchooser import askcolor
+
 
 #KIVY
 from kivy.app import App
@@ -273,12 +275,15 @@ def block_adverts():
     except:
         print("That did not work for some reason")
 
+# COLOUR PICKER FUNC
+def change_color():
+    colors = askcolor(title="Tkinter Color Chooser")
 
 
 # GUI SETUP
 window = tk.Tk()
 
-window.geometry('500x700')
+window.geometry('500x800')
 window.resizable(False, False)
 window.title('TM470 application test')
 
@@ -340,6 +345,10 @@ changeBackgroundButton.pack(fill='x', expand=True, pady=10)
 # BLOCK ADVERTS
 blockAdsButton = ttk.Button(window, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=10)
+
+# CHOOSE A COLOUR
+chooseColourButton = ttk.Button(window, text="Pick a Colour", command=change_color)
+chooseColourButton.pack(fill='x', expand=True, pady=10)
 
 
 options = Options()
