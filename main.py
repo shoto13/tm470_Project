@@ -12,7 +12,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 from tkinter import *
 from urllib.request import urlopen
-from bs4 import BeautifulSoup
+from ttkthemes import ThemedStyle
 
 #KIVY
 from kivy.app import App
@@ -281,6 +281,10 @@ window = tk.Tk()
 window.geometry('500x700')
 window.resizable(False, False)
 window.title('TM470 application test')
+
+# Set the initial theme
+style = ThemedStyle(window)
+style.theme_use('adapta')
 
 urlString = tk.StringVar()
 
