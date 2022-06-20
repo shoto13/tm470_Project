@@ -15,11 +15,6 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 
-
-#KIVY
-from kivy.app import App
-
-
 #SET STANDARD ZOOM
 zoom = 1.0
 
@@ -57,9 +52,13 @@ def flip_page_180():
 
 # CHANGE FONT COLOUR
 def colour_text_red():
+
+    color = change_color()
+
     try:
+
         elem1 = driver.find_element(By.TAG_NAME, 'body')
-        driver.execute_script("arguments[0].style.color='red';", elem1)
+        driver.execute_script('arguments[0].style.color="{}";'.format(color), elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
         print('could not find that element')
@@ -68,7 +67,7 @@ def colour_text_red():
     try:
         elem2 = driver.find_elements(By.TAG_NAME, 'p')
         for element in elem2:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem2.tag_name))
     except:
         print('could not find that element')
@@ -76,7 +75,7 @@ def colour_text_red():
 
     try:
         elem3 = driver.find_element(By.TAG_NAME, 'h1')
-        driver.execute_script("arguments[0].style.color='red';", elem3)
+        driver.execute_script('arguments[0].style.color="{}";'.format(color), elem3)
         print('Found <%s> element with that class name!' % (elem3.tag_name))
     except:
         print('could not find that element')
@@ -85,7 +84,7 @@ def colour_text_red():
     try:
         elem4 = driver.find_elements(By.TAG_NAME, 'h2')
         for element in elem4:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem4.tag_name))
     except:
         print('could not find that element')
@@ -94,7 +93,7 @@ def colour_text_red():
     try:
         elem5 = driver.find_elements(By.TAG_NAME, 'iframe')
         for element in elem5:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem5.tag_name))
     except:
         print('could not find that element')
@@ -103,7 +102,7 @@ def colour_text_red():
     try:
         elem6 = driver.find_elements(By.TAG_NAME, 'ul')
         for element in elem6:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem6.tag_name))
     except:
         print('could not find that element')
@@ -112,7 +111,7 @@ def colour_text_red():
     try:
         elem7 = driver.find_elements(By.TAG_NAME, 'div')
         for element in elem7:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem7.tag_name))
     except:
         print('could not find that element')
@@ -120,7 +119,7 @@ def colour_text_red():
     try:
         elem8 = driver.find_elements(By.TAG_NAME, 'a')
         for element in elem8:
-            driver.execute_script("arguments[0].style.color='red';", element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
         print('Found <%s> element with that class name!' % (elem8.tag_name))
     except:
         print('could not find that element')
@@ -248,9 +247,11 @@ def display_text_content_exclusive():
 
 
 def change_bg_colour():
+    color = change_color()
+
     try:
         elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
-        driver.execute_script("arguments[0].style.backgroundColor ='blue';", elem1)
+        driver.execute_script("arguments[0].style.backgroundColor ='{}';".format(color), elem1)
         print("That seems to have worked to be honest")
 
     except:
@@ -275,16 +276,19 @@ def block_adverts():
     except:
         print("That did not work for some reason")
 
+
 # COLOUR PICKER FUNC
 def change_color():
-    colors = askcolor(title="Tkinter Color Chooser")
+    colors = askcolor(title="Tkinter Color Chooser")[1]
+    print(colors)
+    return colors
 
 
 # GUI SETUP
 window = tk.Tk()
 
-window.geometry('500x800')
-window.resizable(False, False)
+window.geometry('500x700')
+window.resizable(True, True)
 window.title('TM470 application test')
 
 # Set the initial theme
@@ -304,51 +308,55 @@ urlEntry.focus()
 
 # URL RUN BUTTON
 urlButton = ttk.Button(window, text="Get Page", command=url_button_clicked)
-urlButton.pack(fill='x', expand=True, pady=10)
+urlButton.pack(fill='x', expand=True, pady=8)
+
+
+# # COLOR BUTTONS
+# bgColButton = ttk.Button(window, text="Background Colour")
+# bgColButton.pack(side=BOTTOM)
+# textColButton = ttk.Button(window, text="Text Colour")
+# textColButton.pack(side=BOTTOM)
 
 # FLIP PAGE BUTTON
 flipButton = ttk.Button(window, text="Flip page 180", command=flip_page_180)
-flipButton.pack(fill='x', expand=True, pady=10)
+flipButton.pack(fill='x', expand=True, pady=8)
+
 
 # FONT COLOUR BUTTON
 recolourButton = ttk.Button(window, text="Recolour text", command=colour_text_red)
-recolourButton.pack(fill='x', expand=True, pady=10)
+recolourButton.pack(fill='x', expand=True, pady=8)
 
 # ZOOM PAGE IN
 resizeButton = ttk.Button(window, text="Zoom page in", command=zoom_page)
-resizeButton.pack(fill='x', expand=True, pady=10)
+resizeButton.pack(fill='x', expand=True, pady=8)
 
 # ZOOM PAGE OUT
 resizeButton = ttk.Button(window, text="Zoom page out", command=zoom_page_out)
-resizeButton.pack(fill='x', expand=True, pady=10)
+resizeButton.pack(fill='x', expand=True, pady=8)
 
 # DISABLE JS BUTTON
 toggleJsButton = ttk.Button(window, text="Toggle JavaScript On/Off", command=toggle_js)
-toggleJsButton.pack(fill='x', expand=True, pady=10)
+toggleJsButton.pack(fill='x', expand=True, pady=8)
 
 # DOWNLOAD PAGE TO FILE
 downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
-downloadPageButton.pack(fill='x', expand=True, pady=10)
+downloadPageButton.pack(fill='x', expand=True, pady=8)
 
 # DISPLAY JUST TEXTUAL CONTENT
 textOnlyButton = ttk.Button(window, text="Display page text", command=display_text_content_exclusive)
-textOnlyButton.pack(fill='x', expand=True, pady=10)
+textOnlyButton.pack(fill='x', expand=True, pady=8)
 
 # REMOVE IMAGES
 disableImagesButton = ttk.Button(window, text="Toggle page images On/Off", command=toggle_images)
-disableImagesButton.pack(fill='x', expand=True, pady=10)
+disableImagesButton.pack(fill='x', expand=True, pady=8)
 
 # CHANGE BACKGROUND COLOURS
 changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=change_bg_colour)
-changeBackgroundButton.pack(fill='x', expand=True, pady=10)
+changeBackgroundButton.pack(fill='x', expand=True, pady=8)
 
 # BLOCK ADVERTS
 blockAdsButton = ttk.Button(window, text="Block Adverts", command=block_adverts)
-blockAdsButton.pack(fill='x', expand=True, pady=10)
-
-# CHOOSE A COLOUR
-chooseColourButton = ttk.Button(window, text="Pick a Colour", command=change_color)
-chooseColourButton.pack(fill='x', expand=True, pady=10)
+blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 
 options = Options()
