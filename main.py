@@ -291,6 +291,19 @@ window.geometry('500x700')
 window.resizable(True, True)
 window.title('TM470 application test')
 
+# TAB DISPLAY SETUP
+tabControl = ttk.Notebook(window)
+
+tab1 = ttk.Frame(tabControl)
+tab2 = ttk.Frame(tabControl)
+
+tabControl.add(tab1, text='Controls')
+tabControl.add(tab2, text='Settings')
+
+tabControl.pack(expand=1, fill="both")
+
+
+
 # Set the initial theme
 style = ThemedStyle(window)
 style.theme_use('adapta')
@@ -298,64 +311,58 @@ style.theme_use('adapta')
 urlString = tk.StringVar()
 
 # URL ENTRY INFO
-urlLabel = ttk.Label(window, text="Enter URL:")
+urlLabel = ttk.Label(tab1, text="Enter URL:")
 urlLabel.pack(fill='x', expand=True)
 
-urlEntry = ttk.Entry(window, textvariable=urlString)
+urlEntry = ttk.Entry(tab1, textvariable=urlString)
 urlEntry.pack(fill='x', expand=True)
 urlEntry.focus()
 
 
 # URL RUN BUTTON
-urlButton = ttk.Button(window, text="Get Page", command=url_button_clicked)
+urlButton = ttk.Button(tab1, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=8)
 
 
-# # COLOR BUTTONS
-# bgColButton = ttk.Button(window, text="Background Colour")
-# bgColButton.pack(side=BOTTOM)
-# textColButton = ttk.Button(window, text="Text Colour")
-# textColButton.pack(side=BOTTOM)
-
 # FLIP PAGE BUTTON
-flipButton = ttk.Button(window, text="Flip page 180", command=flip_page_180)
+flipButton = ttk.Button(tab1, text="Flip page 180", command=flip_page_180)
 flipButton.pack(fill='x', expand=True, pady=8)
 
 
 # FONT COLOUR BUTTON
-recolourButton = ttk.Button(window, text="Recolour text", command=colour_text_red)
+recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text_red)
 recolourButton.pack(fill='x', expand=True, pady=8)
 
 # ZOOM PAGE IN
-resizeButton = ttk.Button(window, text="Zoom page in", command=zoom_page)
+resizeButton = ttk.Button(tab1, text="Zoom page in", command=zoom_page)
 resizeButton.pack(fill='x', expand=True, pady=8)
 
 # ZOOM PAGE OUT
-resizeButton = ttk.Button(window, text="Zoom page out", command=zoom_page_out)
+resizeButton = ttk.Button(tab1, text="Zoom page out", command=zoom_page_out)
 resizeButton.pack(fill='x', expand=True, pady=8)
 
 # DISABLE JS BUTTON
-toggleJsButton = ttk.Button(window, text="Toggle JavaScript On/Off", command=toggle_js)
+toggleJsButton = ttk.Button(tab1, text="Toggle JavaScript On/Off", command=toggle_js)
 toggleJsButton.pack(fill='x', expand=True, pady=8)
 
 # DOWNLOAD PAGE TO FILE
-downloadPageButton = ttk.Button(window, text="Download page source", command=dl_page_source)
+downloadPageButton = ttk.Button(tab1, text="Download page source", command=dl_page_source)
 downloadPageButton.pack(fill='x', expand=True, pady=8)
 
 # DISPLAY JUST TEXTUAL CONTENT
-textOnlyButton = ttk.Button(window, text="Display page text", command=display_text_content_exclusive)
+textOnlyButton = ttk.Button(tab1, text="Display page text", command=display_text_content_exclusive)
 textOnlyButton.pack(fill='x', expand=True, pady=8)
 
 # REMOVE IMAGES
-disableImagesButton = ttk.Button(window, text="Toggle page images On/Off", command=toggle_images)
+disableImagesButton = ttk.Button(tab1, text="Toggle page images On/Off", command=toggle_images)
 disableImagesButton.pack(fill='x', expand=True, pady=8)
 
 # CHANGE BACKGROUND COLOURS
-changeBackgroundButton = ttk.Button(window, text="Change Background colour", command=change_bg_colour)
+changeBackgroundButton = ttk.Button(tab1, text="Change Background colour", command=change_bg_colour)
 changeBackgroundButton.pack(fill='x', expand=True, pady=8)
 
 # BLOCK ADVERTS
-blockAdsButton = ttk.Button(window, text="Block Adverts", command=block_adverts)
+blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 
