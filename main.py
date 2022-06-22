@@ -1,5 +1,7 @@
 #TM470 Project
 import selenium
+import user_settings
+import page_control_functions
 from selenium import webdriver
 from tkinter import *
 from selenium.webdriver.common.by import By
@@ -14,6 +16,14 @@ from tkinter import *
 from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
+
+
+# USER DEFINED SETTINGS
+text_colour_preference = "#C4826E"
+background_colour_preference = "#5865F2"
+javascript_on_preference = True
+page_images_preference = True
+show_ads_preference = False
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -52,13 +62,15 @@ def flip_page_180():
 
 # CHANGE FONT COLOUR
 def colour_text_red():
+    global text_colour_preference
 
-    color = change_color()
+    # color = change_color()
+    text_colour_preference = change_color()
 
     try:
 
         elem1 = driver.find_element(By.TAG_NAME, 'body')
-        driver.execute_script('arguments[0].style.color="{}";'.format(color), elem1)
+        driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
         print('could not find that element')
@@ -67,7 +79,7 @@ def colour_text_red():
     try:
         elem2 = driver.find_elements(By.TAG_NAME, 'p')
         for element in elem2:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem2.tag_name))
     except:
         print('could not find that element')
@@ -75,7 +87,7 @@ def colour_text_red():
 
     try:
         elem3 = driver.find_element(By.TAG_NAME, 'h1')
-        driver.execute_script('arguments[0].style.color="{}";'.format(color), elem3)
+        driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), elem3)
         print('Found <%s> element with that class name!' % (elem3.tag_name))
     except:
         print('could not find that element')
@@ -84,7 +96,7 @@ def colour_text_red():
     try:
         elem4 = driver.find_elements(By.TAG_NAME, 'h2')
         for element in elem4:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem4.tag_name))
     except:
         print('could not find that element')
@@ -93,7 +105,7 @@ def colour_text_red():
     try:
         elem5 = driver.find_elements(By.TAG_NAME, 'iframe')
         for element in elem5:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem5.tag_name))
     except:
         print('could not find that element')
@@ -102,7 +114,7 @@ def colour_text_red():
     try:
         elem6 = driver.find_elements(By.TAG_NAME, 'ul')
         for element in elem6:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem6.tag_name))
     except:
         print('could not find that element')
@@ -111,7 +123,7 @@ def colour_text_red():
     try:
         elem7 = driver.find_elements(By.TAG_NAME, 'div')
         for element in elem7:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem7.tag_name))
     except:
         print('could not find that element')
@@ -119,7 +131,7 @@ def colour_text_red():
     try:
         elem8 = driver.find_elements(By.TAG_NAME, 'a')
         for element in elem8:
-            driver.execute_script('arguments[0].style.color="{}";'.format(color), element)
+            driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), element)
         print('Found <%s> element with that class name!' % (elem8.tag_name))
     except:
         print('could not find that element')
@@ -185,11 +197,11 @@ def toggle_images():
     try:
 
         # Global functions to let us work with driver from within our functions
-        global disableimages
         global driver
+        global page_images_preference
 
-        # Switch disableimages boolean without knowing its value
-        disableimages = not disableimages
+        # Switch image preference boolean without knowing its value
+        page_images_preference = not page_images_preference
         msg = "Restarting the browser with updated Image display settings"
 
         # Close - BUT DO NOT KILL - driver so that we can update chrome options.
@@ -247,11 +259,11 @@ def display_text_content_exclusive():
 
 
 def change_bg_colour():
-    color = change_color()
+    background_colour_preference = change_color()
 
     try:
         elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
-        driver.execute_script("arguments[0].style.backgroundColor ='{}';".format(color), elem1)
+        driver.execute_script("arguments[0].style.backgroundColor ='{}';".format(background_colour_preference), elem1)
         print("That seems to have worked to be honest")
 
     except:
@@ -303,13 +315,14 @@ tabControl.add(tab2, text='Settings')
 tabControl.pack(expand=1, fill="both")
 
 
-
 # Set the initial theme
 style = ThemedStyle(window)
 style.theme_use('adapta')
 
 urlString = tk.StringVar()
 
+
+# TAB 1 ====!!!!!====
 # URL ENTRY INFO
 urlLabel = ttk.Label(tab1, text="Enter URL:")
 urlLabel.pack(fill='x', expand=True)
@@ -366,6 +379,41 @@ blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 
+#TAB 2 ====!!!!====
+
+textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference)
+textColourLabel.pack(fill='x', expand=True)
+
+backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference)
+backgroundColourLabel.pack(fill='x', expand=True)
+
+
+if (javascript_on_preference):
+    jsp = "JavaScript ON"
+else:
+    jsp = "JavaScript OFF"
+
+javascriptPreferenceLabel = ttk.Label(tab2, text="JavaScript on/off preference: " + jsp)
+javascriptPreferenceLabel.pack(fill='x', expand=True)
+
+
+if (page_images_preference):
+    pip = "Image display ON"
+else:
+    pip = "Image display OFF"
+
+imagesPreferenceLabel = ttk.Label(tab2, text="Page images preference: " + pip)
+imagesPreferenceLabel.pack(fill='x', expand=True)
+
+if (show_ads_preference):
+    sap = "Adverts ON"
+else:
+    sap = "Adverts OFF"
+
+adsPreferenceLabel = ttk.Label(tab2, text="Ad display preference: " + sap)
+adsPreferenceLabel.pack(fill='x', expand=True)
+
+
 options = Options()
 
 def chrome_options_set():
@@ -375,7 +423,7 @@ def chrome_options_set():
     else:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
 
-    if disableimages:
+    if not page_images_preference:
         options.add_argument('--blink-settings=imagesEnabled=false')
     else:
         options.add_argument('--blink-settings=imagesEnabled=true')
