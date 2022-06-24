@@ -2,6 +2,7 @@
 import selenium
 import user_settings
 import page_control_functions
+import dbfile
 from selenium import webdriver
 from tkinter import *
 from selenium.webdriver.common.by import By
@@ -17,6 +18,10 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 
+#DB SETUP
+#db username: tm470test
+#db pass: dAVg7WKRh01pGudx
+
 
 # USER DEFINED SETTINGS
 text_colour_preference = "#C4826E"
@@ -24,6 +29,9 @@ background_colour_preference = "#5865F2"
 javascript_on_preference = True
 page_images_preference = True
 show_ads_preference = False
+
+test_user_settings = dbfile.u_settings_collection.find_one({})
+print(test_user_settings)
 
 #SET STANDARD ZOOM
 zoom = 1.0
