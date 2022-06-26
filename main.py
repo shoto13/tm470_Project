@@ -27,19 +27,25 @@ from tkinter.colorchooser import askcolor
 text_colour_preference = "#C4826E"
 background_colour_preference = "#5865F2"
 javascript_on_preference = True
-page_images_preference = True
+page_images_preference = False
 show_ads_preference = False
 
 test_user_settings = dbfile.u_settings_collection.find_one({})
 print(test_user_settings)
 
+
 #SET STANDARD ZOOM
 zoom = 1.0
 
-disablejs = False
-disableimages = False
+initialised = False
 
 ## FUNCTIONS ##
+
+# START UP SCRIPT
+def startup_init_jsimgs():
+    global initialised
+    chrome_options_set()
+
 
 # LOAD URL FUNCTION
 def url_button_clicked():
@@ -49,9 +55,11 @@ def url_button_clicked():
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + urlString.get()
 
+
     msg = f'Your entered URL {url} has been displayed'
 
     driver.get(url)
+
     showinfo(
         title='Information',
         message=msg
@@ -69,11 +77,13 @@ def flip_page_180():
 
 
 # CHANGE FONT COLOUR
-def colour_text_red():
+def colour_text():
     global text_colour_preference
 
-    # color = change_color()
-    text_colour_preference = change_color()
+    # ONLY LAUNCH THE COLOUR PICKER IF THE APP IS ALREADY INITIALISED,
+    # IF NOT WE WILL USE THE COLOUR VALUE PREV DEFINED AND STORED IN MONGO
+    if initialised:
+        text_colour_preference = change_color()
 
     try:
 
@@ -170,11 +180,11 @@ def toggle_js():
     try:
 
         # Global functions to let us work with driver from within our functions
-        global disablejs
+        global javascript_on_preference
         global driver
 
         # Switch disablejs boolean without knowing its value
-        disablejs = not disablejs
+        javascript_on_preference = not javascript_on_preference
         msg = "Restarting the browser with updated JavaScript settings"
 
         # Close - BUT DO NOT KILL - driver so that we can update chrome options.
@@ -194,7 +204,7 @@ def toggle_js():
         #Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable JS')
-        print('disable javascript: ' + str(disablejs))
+        print('disable javascript: ' + str(javascript_on_preference))
 
     except:
         print('could not find that')
@@ -267,7 +277,10 @@ def display_text_content_exclusive():
 
 
 def change_bg_colour():
-    background_colour_preference = change_color()
+    global background_colour_preference
+
+    if initialised:
+        background_colour_preference = change_color()
 
     try:
         elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
@@ -351,7 +364,7 @@ flipButton.pack(fill='x', expand=True, pady=8)
 
 
 # FONT COLOUR BUTTON
-recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text_red)
+recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text)
 recolourButton.pack(fill='x', expand=True, pady=8)
 
 # ZOOM PAGE IN
@@ -426,7 +439,10 @@ options = Options()
 
 def chrome_options_set():
 
-    if disablejs:
+    global javascript_on_preference
+    global page_images_preference
+
+    if javascript_on_preference:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
     else:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
@@ -438,12 +454,12 @@ def chrome_options_set():
 
 
 PATH = "/home/vxv/chromedriver"
+startup_init_jsimgs()
 
 driver = webdriver.Chrome(
     executable_path=PATH,
     options=options
 )
-
 
 window.mainloop()
 
