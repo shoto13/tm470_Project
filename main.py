@@ -239,7 +239,7 @@ def toggle_images():
         # Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable Images')
-        print('disable images: ' + str(disableimages))
+        print('disable images: ' + str(page_images_preference))
 
     except:
         print('could not find that')
