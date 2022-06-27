@@ -18,21 +18,23 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 
-#DB SETUP
-#db username: tm470test
-#db pass: dAVg7WKRh01pGudx
-
 
 # USER DEFINED SETTINGS
+
 text_colour_preference = "#C4826E"
 background_colour_preference = "#5865F2"
 javascript_on_preference = True
 page_images_preference = False
 show_ads_preference = False
 
-test_user_settings = dbfile.u_settings_collection.find_one({})
+#GET THE USER
+
+#test_user_sedbfile.u_settings_collection.find({"user_name": "test_user"})
+
+test_user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
 print(test_user_settings)
 
+print(type(test_user_settings))
 
 #SET STANDARD ZOOM
 zoom = 1.0
