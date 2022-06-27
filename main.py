@@ -41,20 +41,26 @@ initialised = False
 
 ## FUNCTIONS ##
 
-# START UP SCRIPT
+# START UP SCRIPTS
 def startup_init_jsimgs():
-    global initialised
     chrome_options_set()
+def startup_init_colorise():
+    global initialised
+    colour_text()
+    change_bg_colour()
+    initialised = True
 
 
 # LOAD URL FUNCTION
 def url_button_clicked():
+    global initialised
     url = urlString.get()
+
+    initialised = False
 
     #make sure URL has correct prefix
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + urlString.get()
-
 
     msg = f'Your entered URL {url} has been displayed'
 
@@ -64,6 +70,10 @@ def url_button_clicked():
         title='Information',
         message=msg
     )
+
+    # IF APP IS NOT INITIALISED, RUN THE COLORISE FUNCTION WHEN URL IS LOADED
+    if not initialised:
+        startup_init_colorise()
 
 
 # FLIP PAGE FUNCTION
