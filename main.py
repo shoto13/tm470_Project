@@ -18,23 +18,17 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 
-
-# USER DEFINED SETTINGS
-
-text_colour_preference = "#C4826E"
-background_colour_preference = "#5865F2"
-javascript_on_preference = True
-page_images_preference = False
-show_ads_preference = False
-
 #GET THE USER
-
-#test_user_sedbfile.u_settings_collection.find({"user_name": "test_user"})
-
 test_user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
 print(test_user_settings)
 
-print(type(test_user_settings))
+# USER DEFINED SETTINGS
+text_colour_preference = test_user_settings['text_colour_preference']
+background_colour_preference = test_user_settings['background_colour_preference']
+javascript_on_preference = test_user_settings['javascript_on_preference']
+page_images_preference = test_user_settings['page_images_preference']
+show_ads_preference = test_user_settings['show_ads_preference']
+
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -96,6 +90,8 @@ def colour_text():
     # IF NOT WE WILL USE THE COLOUR VALUE PREV DEFINED AND STORED IN MONGO
     if initialised:
         text_colour_preference = change_color()
+
+    #print(text_colour_preference)
 
     try:
 
@@ -165,6 +161,11 @@ def colour_text():
         print('Found <%s> element with that class name!' % (elem8.tag_name))
     except:
         print('could not find that element')
+
+    #UPDATE THE DICT
+    test_user_settings['text_colour_preference'] = text_colour_preference
+    #UPDATE THE DB
+    dbfile.u_settings_collection.update_one({}, {'$set': {'text_colour_preference': text_colour_preference}})
 
 
 # ZOOM PAGE

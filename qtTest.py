@@ -114,6 +114,8 @@ driver = webdriver.Chrome(
     executable_path=PATH,
     options=options
 )
-
+#DB SETUP
+#db username: tm470test
+#db pass: dAVg7WKRh01pGudx
 
 
