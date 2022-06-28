@@ -91,7 +91,6 @@ def colour_text():
     if initialised:
         text_colour_preference = change_color()
 
-    #print(text_colour_preference)
 
     try:
 
@@ -219,6 +218,11 @@ def toggle_js():
         print('Sent the commands to disable/enable JS')
         print('disable javascript: ' + str(javascript_on_preference))
 
+        # UPDATE THE DICT
+        test_user_settings['javascript_on_preference'] = javascript_on_preference
+        # UPDATE THE DB
+        dbfile.u_settings_collection.update_one({}, {'$set': {'javascript_on_preference': javascript_on_preference}})
+
     except:
         print('could not find that')
 
@@ -253,6 +257,10 @@ def toggle_images():
         url_button_clicked()
         print('Sent the commands to disable/enable Images')
         print('disable images: ' + str(page_images_preference))
+
+        test_user_settings['page_images_preference'] = page_images_preference
+        # UPDATE THE DB
+        dbfile.u_settings_collection.update_one({}, {'$set': {'page_images_preference': page_images_preference}})
 
     except:
         print('could not find that')
@@ -302,6 +310,12 @@ def change_bg_colour():
 
     except:
         print("That didn't work at all")
+
+
+    #UPDATE THE DICT
+    test_user_settings['background_colour_preference'] = background_colour_preference
+    #UPDATE THE DB
+    dbfile.u_settings_collection.update_one({}, {'$set': {'background_colour_preference': background_colour_preference}})
 
 def block_adverts():
     try:
