@@ -81,6 +81,9 @@ def flip_page_180():
     except:
         print('could not find that element')
 
+# PAGE SEARCH BAR FUNCTION
+
+
 
 # CHANGE FONT COLOUR
 def colour_text():
@@ -365,7 +368,7 @@ tabControl.pack(expand=1, fill="both")
 
 # Set the initial theme
 style = ThemedStyle(window)
-style.theme_use('adapta')
+style.theme_use('radiance')
 
 urlString = tk.StringVar()
 
@@ -466,7 +469,7 @@ options = Options()
 
 def chrome_options_set():
 
-    global javascript_on_preference
+    global javascript_on_preferencef
     global page_images_preference
 
     if javascript_on_preference:
