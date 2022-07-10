@@ -1,7 +1,7 @@
 #TM470 Project
 import selenium
-import user_settings
-import page_control_functions
+#import user_settings
+#import page_control_functions
 import dbfile
 from selenium import webdriver
 from tkinter import *
@@ -96,7 +96,6 @@ def colour_text():
 
 
     try:
-
         elem1 = driver.find_element(By.TAG_NAME, 'body')
         driver.execute_script('arguments[0].style.color="{}";'.format(text_colour_preference), elem1)
         print('Found <%s> element with that class name!' % (elem1.tag_name))
@@ -234,7 +233,7 @@ def toggle_js():
 def toggle_images():
     try:
 
-        # Global functions to let us work with driver from within our functions
+        # Global functions to let us work with driver from within function
         global driver
         global page_images_preference
 
@@ -242,7 +241,7 @@ def toggle_images():
         page_images_preference = not page_images_preference
         msg = "Restarting the browser with updated Image display settings"
 
-        # Close - BUT DO NOT KILL - driver so that we can update chrome options.
+        # Close BUT DO NOT KILL driver so that we can update chrome options.
         driver.close()
         chrome_options_set()
 
@@ -266,7 +265,7 @@ def toggle_images():
         dbfile.u_settings_collection.update_one({}, {'$set': {'page_images_preference': page_images_preference}})
 
     except:
-        print('could not find that')
+        print('could not perform the image toggle action')
 
 # DOWNLOAD PAGE SOURCE TO FILE
 def dl_page_source():
@@ -322,9 +321,9 @@ def change_bg_colour():
 
 def block_adverts():
     try:
-        all_iframes = driver.find_elements_by_tag_name("iframe")
-        if len(all_iframes) > 0:
-            print("Ad Found\n")
+        iframes_collection = driver.find_elements(By.TAG_NAME, "iframe")
+        if len(iframes_collection) > 0:
+            print("Advert Found\n")
             driver.execute_script("""
                 var elems = document.getElementsByTagName("iframe"); 
                 for(var i = 0, max = elems.length; i < max; i++)
@@ -332,12 +331,12 @@ def block_adverts():
                          elems[i].hidden=true;
                      }
                                   """)
-            print('Total Ads: ' + str(len(all_iframes)))
+            print('Number of frames located: ' + str(len(iframes_collection)))
         else:
-            print('No frames found')
+            print('No frames located')
 
     except:
-        print("That did not work for some reason")
+        print("Ad blocking failed")
 
 
 # COLOUR PICKER FUNC
@@ -469,7 +468,7 @@ options = Options()
 
 def chrome_options_set():
 
-    global javascript_on_preferencef
+    global javascript_on_preference
     global page_images_preference
 
     if javascript_on_preference:
