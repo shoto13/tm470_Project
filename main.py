@@ -18,6 +18,7 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 
+
 #GET THE USER
 test_user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
 print(test_user_settings)
@@ -177,6 +178,7 @@ def zoom_page():
         driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
         print('Zooming unsuccessful')
+
 
 
 # ZOOM PAGE OUT
