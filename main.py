@@ -82,9 +82,6 @@ def flip_page_180():
     except:
         print('could not find that element')
 
-# PAGE SEARCH BAR FUNCTION
-
-
 
 # CHANGE FONT COLOUR
 def colour_text():
