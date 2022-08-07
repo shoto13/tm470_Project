@@ -1,4 +1,6 @@
 #TM470 Project
+import tkinter
+
 import selenium
 #import user_settings
 #import page_control_functions
@@ -366,7 +368,7 @@ tabControl.pack(expand=1, fill="both")
 
 # Set the initial theme
 style = ThemedStyle(window)
-style.theme_use('radiance')
+style.theme_use('scidgreen')
 
 urlString = tk.StringVar()
 
@@ -385,11 +387,9 @@ urlEntry.focus()
 urlButton = ttk.Button(tab1, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=8)
 
-
-# FLIP PAGE BUTTON
-flipButton = ttk.Button(tab1, text="Flip page 180", command=flip_page_180)
-flipButton.pack(fill='x', expand=True, pady=8)
-
+# # FLIP PAGE BUTTON
+# flipButton = ttk.Button(tab1, text="Flip page 180", command=flip_page_180)
+# flipButton.pack(fill='x', expand=True, pady=8)
 
 # FONT COLOUR BUTTON
 recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text)
@@ -426,6 +426,34 @@ changeBackgroundButton.pack(fill='x', expand=True, pady=8)
 # BLOCK ADVERTS
 blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=8)
+
+#PROFILE SETTINGS
+#DROPDOWN FOR THEMES
+USER_PROFILES = [
+    "Profile one",
+    "Profile two",
+    "Profile three",
+    "Profile four"
+]
+
+value_in = tkinter.StringVar(window)
+value_in.set("Select a profile")
+
+profile_menu = tkinter.OptionMenu(window, value_in, *USER_PROFILES)
+profile_menu.pack(fill='x', expand=True, pady=8)
+
+#SET NEW PROFILE
+# PROFILE ENTRY INFO
+newProfileLabel = ttk.Label(tab1, text="New Profile: ")
+newProfileLabel.pack(fill='x', expand=True)
+
+profileNameEntry = ttk.Entry(tab1, textvariable=urlString)
+profileNameEntry.pack(fill='x', expand=True)
+profileNameEntry.focus()
+
+# PROFILE SET BUTTON
+setProfileButton = ttk.Button(tab1, text="Set New Profile", command=url_button_clicked)
+setProfileButton.pack(fill='x', expand=True, pady=8)
 
 
 #TAB 2 ====!!!!====
