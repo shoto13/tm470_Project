@@ -1,9 +1,6 @@
 #TM470 Project
 import tkinter
-
 import selenium
-#import user_settings
-#import page_control_functions
 import dbfile
 from selenium import webdriver
 from tkinter import *
@@ -32,7 +29,6 @@ javascript_on_preference = test_user_settings['javascript_on_preference']
 page_images_preference = test_user_settings['page_images_preference']
 show_ads_preference = test_user_settings['show_ads_preference']
 
-
 #SET STANDARD ZOOM
 zoom = 1.0
 
@@ -43,6 +39,7 @@ initialised = False
 # START UP SCRIPTS
 def startup_init_jsimgs():
     chrome_options_set()
+
 def startup_init_colorise():
     global initialised
     colour_text()
@@ -74,7 +71,6 @@ def url_button_clicked():
     if not initialised:
         startup_init_colorise()
 
-
 # FLIP PAGE FUNCTION
 def flip_page_180():
     try:
@@ -83,7 +79,6 @@ def flip_page_180():
         print('Found <%s> element with that class name!' % (elem1.tag_name))
     except:
         print('could not find that element')
-
 
 # CHANGE FONT COLOUR
 def colour_text():
@@ -177,7 +172,6 @@ def zoom_page():
         driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
         print('Zooming unsuccessful')
-
 
 
 # ZOOM PAGE OUT
@@ -346,6 +340,35 @@ def change_color():
     print(colors)
     return colors
 
+def new_profile():
+    global profileString
+
+    # PRINT ALL INFO ON NEW PROFILE
+    #TODO:: fix so that this adds the updated values to our atlas install rather than the initial defaults.
+    print("The text colour for this profile is: ", text_colour_preference)
+    print("The background colour for this profile is: ", background_colour_preference)
+    print("The Javascript preference for this profile is set to: ", javascript_on_preference)
+    print("The page images preference for this profile is set to: ", page_images_preference)
+    print("The ads preference for this profile is set to: ", show_ads_preference)
+    # GET NAME OF NEW PROFILE
+    profileName = profileString.get()
+    print("The profile name here is: ", profileName)
+
+    new_profile_doc = {
+        "username": "test_user",
+        "profile_name": profileName,
+        "text_colour_preference": text_colour_preference,
+        "background_colour_preference": background_colour_preference,
+        "javascript_on_preference": javascript_on_preference,
+        "page_images_preference": page_images_preference,
+        "show_ads_preference": show_ads_preference
+    }
+
+    dbfile.u_settings_collection.insert_one(new_profile_doc)
+
+
+
+
 
 # GUI SETUP
 window = tk.Tk()
@@ -427,6 +450,8 @@ changeBackgroundButton.pack(fill='x', expand=True, pady=8)
 blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=8)
 
+
+
 #PROFILE SETTINGS
 #DROPDOWN FOR THEMES
 USER_PROFILES = [
@@ -435,6 +460,8 @@ USER_PROFILES = [
     "Profile three",
     "Profile four"
 ]
+
+profileString = tk.StringVar()
 
 value_in = tkinter.StringVar(window)
 value_in.set("Select a profile")
@@ -447,13 +474,14 @@ profile_menu.pack(fill='x', expand=True, pady=8)
 newProfileLabel = ttk.Label(tab1, text="New Profile: ")
 newProfileLabel.pack(fill='x', expand=True)
 
-profileNameEntry = ttk.Entry(tab1, textvariable=urlString)
+profileNameEntry = ttk.Entry(tab1, textvariable=profileString)
 profileNameEntry.pack(fill='x', expand=True)
 profileNameEntry.focus()
 
 # PROFILE SET BUTTON
-setProfileButton = ttk.Button(tab1, text="Set New Profile", command=url_button_clicked)
+setProfileButton = ttk.Button(tab1, text="Set New Profile", command=new_profile)
 setProfileButton.pack(fill='x', expand=True, pady=8)
+
 
 
 #TAB 2 ====!!!!====
