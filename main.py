@@ -36,6 +36,11 @@ initialised = False
 
 ## FUNCTIONS ##
 
+#TODO get this to list out all profiles on the server
+profiles_list = list(dbfile.u_settings_collection.find({}, 'profile_name'))
+print(profiles_list)
+
+
 # START UP SCRIPTS
 def startup_init_jsimgs():
     chrome_options_set()
@@ -45,7 +50,6 @@ def startup_init_colorise():
     colour_text()
     change_bg_colour()
     initialised = True
-
 
 # LOAD URL FUNCTION
 def url_button_clicked():
@@ -160,9 +164,6 @@ def colour_text():
 
     #UPDATE THE DICT
     test_user_settings['text_colour_preference'] = text_colour_preference
-    #UPDATE THE DB
-    dbfile.u_settings_collection.update_one({}, {'$set': {'text_colour_preference': text_colour_preference}})
-
 
 # ZOOM PAGE
 def zoom_page():
@@ -182,7 +183,6 @@ def zoom_page_out():
         driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
         print('Zooming unsuccessful')
-
 
 # DISABLE/ENABLE JAVASCRIPT
 def toggle_js():
@@ -217,12 +217,9 @@ def toggle_js():
 
         # UPDATE THE DICT
         test_user_settings['javascript_on_preference'] = javascript_on_preference
-        # UPDATE THE DB
-        dbfile.u_settings_collection.update_one({}, {'$set': {'javascript_on_preference': javascript_on_preference}})
 
     except:
         print('could not find that')
-
 
 # DISABLE/ENABLE IMAGES
 def toggle_images():
@@ -256,8 +253,6 @@ def toggle_images():
         print('disable images: ' + str(page_images_preference))
 
         test_user_settings['page_images_preference'] = page_images_preference
-        # UPDATE THE DB
-        dbfile.u_settings_collection.update_one({}, {'$set': {'page_images_preference': page_images_preference}})
 
     except:
         print('could not perform the image toggle action')
@@ -311,8 +306,6 @@ def change_bg_colour():
 
     #UPDATE THE DICT
     test_user_settings['background_colour_preference'] = background_colour_preference
-    #UPDATE THE DB
-    dbfile.u_settings_collection.update_one({}, {'$set': {'background_colour_preference': background_colour_preference}})
 
 def block_adverts():
     try:
@@ -365,8 +358,6 @@ def new_profile():
     }
 
     dbfile.u_settings_collection.insert_one(new_profile_doc)
-
-
 
 
 
