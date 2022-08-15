@@ -16,10 +16,11 @@ from tkinter import *
 from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
+import pymongo
 
-
-#GET THE USER
+# GET THE USER
 test_user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
+
 print(test_user_settings)
 
 # USER DEFINED SETTINGS
@@ -31,13 +32,10 @@ show_ads_preference = test_user_settings['show_ads_preference']
 
 #SET STANDARD ZOOM
 zoom = 1.0
-
 initialised = False
 
 ## FUNCTIONS ##
-
-#TODO get this to list out all profiles on the server
-profiles_list = list(dbfile.u_settings_collection.find({}, 'profile_name'))
+profiles_list = dbfile.u_settings_collection.distinct("profile_name")
 print(profiles_list)
 
 
@@ -173,7 +171,6 @@ def zoom_page():
         driver.execute_script("document.body.style.zoom='%s';" % zoom)
     except:
         print('Zooming unsuccessful')
-
 
 # ZOOM PAGE OUT
 def zoom_page_out():
@@ -337,7 +334,6 @@ def new_profile():
     global profileString
 
     # PRINT ALL INFO ON NEW PROFILE
-    #TODO:: fix so that this adds the updated values to our atlas install rather than the initial defaults.
     print("The text colour for this profile is: ", text_colour_preference)
     print("The background colour for this profile is: ", background_colour_preference)
     print("The Javascript preference for this profile is set to: ", javascript_on_preference)
@@ -457,7 +453,7 @@ profileString = tk.StringVar()
 value_in = tkinter.StringVar(window)
 value_in.set("Select a profile")
 
-profile_menu = tkinter.OptionMenu(window, value_in, *USER_PROFILES)
+profile_menu = tkinter.OptionMenu(window, value_in, *profiles_list)
 profile_menu.pack(fill='x', expand=True, pady=8)
 
 #SET NEW PROFILE
