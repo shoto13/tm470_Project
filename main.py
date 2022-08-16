@@ -38,7 +38,7 @@ initialised = False
 profiles_list = dbfile.u_settings_collection.distinct("profile_name")
 print(profiles_list)
 
-
+# ALL SCRIPTS ---___---
 # START UP SCRIPTS
 def startup_init_jsimgs():
     chrome_options_set()
@@ -323,7 +323,6 @@ def block_adverts():
     except:
         print("Ad blocking failed")
 
-
 # COLOUR PICKER FUNC
 def change_color():
     colors = askcolor(title="Tkinter Color Chooser")[1]
@@ -343,18 +342,24 @@ def new_profile():
     profileName = profileString.get()
     print("The profile name here is: ", profileName)
 
-    new_profile_doc = {
-        "username": "test_user",
-        "profile_name": profileName,
-        "text_colour_preference": text_colour_preference,
-        "background_colour_preference": background_colour_preference,
-        "javascript_on_preference": javascript_on_preference,
-        "page_images_preference": page_images_preference,
-        "show_ads_preference": show_ads_preference
-    }
+    if profileName :
+        new_profile_doc = {
+            "username": "test_user",
+            "profile_name": profileName,
+            "text_colour_preference": text_colour_preference,
+            "background_colour_preference": background_colour_preference,
+            "javascript_on_preference": javascript_on_preference,
+            "page_images_preference": page_images_preference,
+            "show_ads_preference": show_ads_preference
+        }
+        dbfile.u_settings_collection.insert_one(new_profile_doc)
+    else:
+        msg = f'Please enter a profile name to save a new profile'
 
-    dbfile.u_settings_collection.insert_one(new_profile_doc)
-
+        showinfo(
+            title='Information',
+            message=msg
+        )
 
 
 # GUI SETUP
