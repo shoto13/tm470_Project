@@ -57,6 +57,7 @@ def profile_selected():
 
     # TODO: update the profile values using the alreayd built startup scripts
     # test to see if git works
+    # changes still not shown
 
 
 # LOAD URL FUNCTION
