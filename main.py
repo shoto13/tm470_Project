@@ -56,6 +56,7 @@ def profile_selected():
     user_settings = dbfile.u_settings_collection.find_one({})
 
     # TODO: update the profile values using the alreayd built startup scripts
+    # test to see if git works
 
 
 # LOAD URL FUNCTION
