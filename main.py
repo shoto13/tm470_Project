@@ -49,6 +49,15 @@ def startup_init_colorise():
     change_bg_colour()
     initialised = True
 
+# PROFILE SELECITON SCRIPT
+
+def profile_selected():
+    # TODO: find the name of the profile selected from the dropdown menu
+    user_settings = dbfile.u_settings_collection.find_one({})
+
+    # TODO: update the profile values using the alreayd built startup scripts
+
+
 # LOAD URL FUNCTION
 def url_button_clicked():
     global initialised
@@ -60,7 +69,7 @@ def url_button_clicked():
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + urlString.get()
 
-    msg = f'Your entered URL {url} has been displayed'
+    msg = 'Your entered URL ' + url + 'has been displayed'
 
     driver.get(url)
 
@@ -310,7 +319,7 @@ def block_adverts():
         if len(iframes_collection) > 0:
             print("Advert Found\n")
             driver.execute_script("""
-                var elems = document.getElementsByTagName("iframe"); 
+                var elems = document.getElementsByTagName("iframe");
                 for(var i = 0, max = elems.length; i < max; i++)
                      {
                          elems[i].hidden=true;
@@ -354,7 +363,7 @@ def new_profile():
         }
         dbfile.u_settings_collection.insert_one(new_profile_doc)
     else:
-        msg = f'Please enter a profile name to save a new profile'
+        msg = 'Please enter a profile name to save a new profile'
 
         showinfo(
             title='Information',
@@ -381,7 +390,7 @@ tabControl.add(tab2, text='Settings')
 tabControl.pack(expand=1, fill="both")
 
 
-# Set the initial theme
+# SET INITIAL THEME
 style = ThemedStyle(window)
 style.theme_use('scidgreen')
 
@@ -443,16 +452,8 @@ blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
 blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 
-
 #PROFILE SETTINGS
-#DROPDOWN FOR THEMES
-USER_PROFILES = [
-    "Profile one",
-    "Profile two",
-    "Profile three",
-    "Profile four"
-]
-
+#DROPDOWN FOR THEME DISPLAY
 profileString = tk.StringVar()
 
 value_in = tkinter.StringVar(window)
@@ -460,6 +461,13 @@ value_in.set("Select a profile")
 
 profile_menu = tkinter.OptionMenu(window, value_in, *profiles_list)
 profile_menu.pack(fill='x', expand=True, pady=8)
+
+# on change dropdown value
+def change_dropdown(*args):
+    print(value_in.get() )
+
+# link function to change dropdown
+value_in.trace('w', change_dropdown)
 
 #SET NEW PROFILE
 # PROFILE ENTRY INFO
@@ -528,8 +536,12 @@ def chrome_options_set():
     else:
         options.add_argument('--blink-settings=imagesEnabled=true')
 
+# desk path
+#PATH = "/home/vxv/chromedriver"
 
-PATH = "/home/vxv/chromedriver"
+# mac path
+PATH = "/Applications/chromedriver"
+
 startup_init_jsimgs()
 
 driver = webdriver.Chrome(
@@ -538,7 +550,3 @@ driver = webdriver.Chrome(
 )
 
 window.mainloop()
-
-
-
-
