@@ -33,6 +33,7 @@ show_ads_preference = user_settings['show_ads_preference']
 
 #SET STANDARD ZOOM
 zoom = 1.0
+# TODO: FIGURE OUT IF WE NEED TO SET THIS TO TRUE SOMEWHERE AFTER THIS WAS REMOVED FROM COLORISE FUNCTION
 initialised = False
 
 ## FUNCTIONS ##
@@ -43,12 +44,12 @@ print(profiles_list)
 # START UP SCRIPTS
 def startup_init_jsimgs():
     chrome_options_set()
+    #toggle_images()
 
 def startup_init_colorise():
     global initialised
     colour_text()
     change_bg_colour()
-    initialised = True
 
 # PROFILE SELECITON SCRIPT
 # TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
@@ -71,8 +72,10 @@ def profile_selected(profile_name):
     page_images_preference = user_settings['page_images_preference']
     show_ads_preference = user_settings['show_ads_preference']
 
-    startup_init_jsimgs()
-    startup_init_colorise()
+    toggle_images()
+    colour_text()
+    change_bg_colour()
+    initialised = True
 
 # LOAD URL FUNCTION
 def url_button_clicked():
@@ -109,12 +112,12 @@ def flip_page_180():
 
 # CHANGE FONT COLOUR
 def colour_text():
-    global user_settings
+    global text_colour_preference
 
     # ONLY LAUNCH THE COLOUR PICKER IF THE APP IS ALREADY INITIALISED,
     # IF NOT WE WILL USE THE COLOUR VALUE PREV DEFINED AND STORED IN MONGO
     if initialised:
-        user_settings['text_colour_preference'] = change_color()
+        text_colour_preference = change_color()
 
 
     try:
@@ -211,11 +214,13 @@ def toggle_js():
     try:
 
         # Global functions to let us work with driver from within our functions
+        global initialised
         global javascript_on_preference
         global driver
 
         # Switch disablejs boolean without knowing its value
-        javascript_on_preference = not javascript_on_preference
+        if initialised:
+            javascript_on_preference = not javascript_on_preference
         msg = "Restarting the browser with updated JavaScript settings"
 
         # Close - BUT DO NOT KILL - driver so that we can update chrome options.
@@ -248,11 +253,13 @@ def toggle_images():
     try:
 
         # Global functions to let us work with driver from within function
+        global initialised
         global driver
         global page_images_preference
 
         # Switch image preference boolean without knowing its value
-        page_images_preference = not page_images_preference
+        if initialised:
+            page_images_preference = not page_images_preference
         msg = "Restarting the browser with updated Image display settings"
 
         # Close BUT DO NOT KILL driver so that we can update chrome options.
@@ -369,7 +376,7 @@ def new_profile():
     profileName = profileString.get()
     print("The profile name here is: ", profileName)
 
-    if profileName ():
+    if profileName:
         new_profile_doc = {
             "username": "test_user",
             "profile_name": profileName,
@@ -380,6 +387,13 @@ def new_profile():
             "show_ads_preference": show_ads_preference
         }
         dbfile.u_settings_collection.insert_one(new_profile_doc)
+
+        msg = f'Your profile: {profileName} has been saved.'
+
+        showinfo(
+            title='Information',
+            message=msg
+        )
     else:
         msg = 'Please enter a profile name to save a new profile'
 
@@ -546,9 +560,9 @@ def chrome_options_set():
     global page_images_preference
 
     if javascript_on_preference:
-        options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
-    else:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
+    else:
+        options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
 
     if not page_images_preference:
         options.add_argument('--blink-settings=imagesEnabled=false')
