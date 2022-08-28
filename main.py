@@ -310,7 +310,7 @@ def display_text_content_exclusive():
     except:
         print('could not download page source')
 
-
+# BACKGROUND COLOUR CHANGER FUNCTION
 def change_bg_colour():
     global background_colour_preference
 
@@ -329,6 +329,7 @@ def change_bg_colour():
     #UPDATE THE DICT
     user_settings['background_colour_preference'] = background_colour_preference
 
+# AD BLOCKER FUNCTION
 def block_adverts():
     try:
         iframes_collection = driver.find_elements(By.TAG_NAME, "iframe")
@@ -354,6 +355,7 @@ def change_color():
     print(colors)
     return colors
 
+# NEW PROFILE CREATION FUNCTION
 def new_profile():
     global profileString
 
@@ -367,7 +369,7 @@ def new_profile():
     profileName = profileString.get()
     print("The profile name here is: ", profileName)
 
-    if profileName :
+    if profileName ():
         new_profile_doc = {
             "username": "test_user",
             "profile_name": profileName,
@@ -405,13 +407,11 @@ tabControl.add(tab2, text='Settings')
 
 tabControl.pack(expand=1, fill="both")
 
-
 # SET INITIAL THEME
 style = ThemedStyle(window)
 style.theme_use('scidgreen')
 
 urlString = tk.StringVar()
-
 
 # TAB 1 ====!!!!!====
 # URL ENTRY INFO
