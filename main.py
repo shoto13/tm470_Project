@@ -1,5 +1,7 @@
 #TM470 Project
 import tkinter
+import pymongo
+import pandas as pd
 import selenium
 import dbfile
 from selenium import webdriver
@@ -19,16 +21,15 @@ from tkinter.colorchooser import askcolor
 import pymongo
 
 # GET THE USER
-test_user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
-
-print(test_user_settings)
+user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
+print(user_settings)
 
 # USER DEFINED SETTINGS
-text_colour_preference = test_user_settings['text_colour_preference']
-background_colour_preference = test_user_settings['background_colour_preference']
-javascript_on_preference = test_user_settings['javascript_on_preference']
-page_images_preference = test_user_settings['page_images_preference']
-show_ads_preference = test_user_settings['show_ads_preference']
+text_colour_preference = user_settings['text_colour_preference']
+background_colour_preference = user_settings['background_colour_preference']
+javascript_on_preference = user_settings['javascript_on_preference']
+page_images_preference = user_settings['page_images_preference']
+show_ads_preference = user_settings['show_ads_preference']
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -50,15 +51,28 @@ def startup_init_colorise():
     initialised = True
 
 # PROFILE SELECITON SCRIPT
+# TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
+def profile_selected(profile_name):
+    global user_settings
+    global initialised
+    initialised = False
+    user_settings = dbfile.u_settings_collection.find_one({"profile_name": profile_name})
+    print(user_settings)
 
-def profile_selected():
-    # TODO: find the name of the profile selected from the dropdown menu
-    user_settings = dbfile.u_settings_collection.find_one({})
+    global text_colour_preference
+    global background_colour_preference
+    global javascript_on_preference
+    global page_images_preference
+    global show_ads_preference
 
-    # TODO: update the profile values using the alreayd built startup scripts
-    # test to see if git works
-    # changes still not shown
+    text_colour_preference = user_settings['text_colour_preference']
+    background_colour_preference = user_settings['background_colour_preference']
+    javascript_on_preference = user_settings['javascript_on_preference']
+    page_images_preference = user_settings['page_images_preference']
+    show_ads_preference = user_settings['show_ads_preference']
 
+    startup_init_jsimgs()
+    startup_init_colorise()
 
 # LOAD URL FUNCTION
 def url_button_clicked():
@@ -95,12 +109,12 @@ def flip_page_180():
 
 # CHANGE FONT COLOUR
 def colour_text():
-    global text_colour_preference
+    global user_settings
 
     # ONLY LAUNCH THE COLOUR PICKER IF THE APP IS ALREADY INITIALISED,
     # IF NOT WE WILL USE THE COLOUR VALUE PREV DEFINED AND STORED IN MONGO
     if initialised:
-        text_colour_preference = change_color()
+        user_settings['text_colour_preference'] = change_color()
 
 
     try:
@@ -172,7 +186,7 @@ def colour_text():
         print('could not find that element')
 
     #UPDATE THE DICT
-    test_user_settings['text_colour_preference'] = text_colour_preference
+    user_settings['text_colour_preference'] = text_colour_preference
 
 # ZOOM PAGE
 def zoom_page():
@@ -224,7 +238,7 @@ def toggle_js():
         print('disable javascript: ' + str(javascript_on_preference))
 
         # UPDATE THE DICT
-        test_user_settings['javascript_on_preference'] = javascript_on_preference
+        user_settings['javascript_on_preference'] = javascript_on_preference
 
     except:
         print('could not find that')
@@ -260,7 +274,7 @@ def toggle_images():
         print('Sent the commands to disable/enable Images')
         print('disable images: ' + str(page_images_preference))
 
-        test_user_settings['page_images_preference'] = page_images_preference
+        user_settings['page_images_preference'] = page_images_preference
 
     except:
         print('could not perform the image toggle action')
@@ -313,7 +327,7 @@ def change_bg_colour():
 
 
     #UPDATE THE DICT
-    test_user_settings['background_colour_preference'] = background_colour_preference
+    user_settings['background_colour_preference'] = background_colour_preference
 
 def block_adverts():
     try:
@@ -466,9 +480,12 @@ profile_menu.pack(fill='x', expand=True, pady=8)
 
 # on change dropdown value
 def change_dropdown(*args):
-    print(value_in.get() )
+    print(value_in.get())
+    global user_settings
+    val = value_in.get()
+    profile_selected(val)
 
-# link function to change dropdown
+# link function to change dropdown with return value set to be used as profile name
 value_in.trace('w', change_dropdown)
 
 #SET NEW PROFILE
@@ -539,10 +556,10 @@ def chrome_options_set():
         options.add_argument('--blink-settings=imagesEnabled=true')
 
 # desk path
-#PATH = "/home/vxv/chromedriver"
+PATH = "/home/vxv/chromedriver"
 
 # mac path
-PATH = "/Applications/chromedriver"
+#PATH = "/Applications/chromedriver"
 
 startup_init_jsimgs()
 
