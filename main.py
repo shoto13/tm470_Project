@@ -27,9 +27,9 @@ print(user_settings)
 # USER DEFINED SETTINGS
 text_colour_preference = user_settings['text_colour_preference']
 background_colour_preference = user_settings['background_colour_preference']
-javascript_on_preference = user_settings['javascript_on_preference']
-page_images_preference = user_settings['page_images_preference']
-show_ads_preference = user_settings['show_ads_preference']
+javascript_on = user_settings['javascript_on']
+images_on = user_settings['images_on']
+ads_on = user_settings['ads_on']
 
 #SET STANDARD ZOOM
 zoom = 1.0
@@ -50,6 +50,7 @@ def startup_init_colorise():
     global initialised
     colour_text()
     change_bg_colour()
+    initialised = True
 
 # PROFILE SELECITON SCRIPT
 # TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
@@ -62,15 +63,15 @@ def profile_selected(profile_name):
 
     global text_colour_preference
     global background_colour_preference
-    global javascript_on_preference
-    global page_images_preference
-    global show_ads_preference
+    global javascript_on
+    global images_on
+    global ads_on
 
     text_colour_preference = user_settings['text_colour_preference']
     background_colour_preference = user_settings['background_colour_preference']
-    javascript_on_preference = user_settings['javascript_on_preference']
-    page_images_preference = user_settings['page_images_preference']
-    show_ads_preference = user_settings['show_ads_preference']
+    javascript_on = user_settings['javascript_on']
+    images_on = user_settings['images_on']
+    ads_on = user_settings['ads_on']
 
     toggle_images()
     colour_text()
@@ -88,7 +89,7 @@ def url_button_clicked():
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + urlString.get()
 
-    msg = 'Your entered URL ' + url + 'has been displayed'
+    msg = 'Your entered URL ' + url + ' has been displayed'
 
     driver.get(url)
 
@@ -215,12 +216,12 @@ def toggle_js():
 
         # Global functions to let us work with driver from within our functions
         global initialised
-        global javascript_on_preference
+        global eference
         global driver
 
         # Switch disablejs boolean without knowing its value
         if initialised:
-            javascript_on_preference = not javascript_on_preference
+            javascript_on = not javascript_on
         msg = "Restarting the browser with updated JavaScript settings"
 
         # Close - BUT DO NOT KILL - driver so that we can update chrome options.
@@ -240,10 +241,10 @@ def toggle_js():
         #Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable JS')
-        print('disable javascript: ' + str(javascript_on_preference))
+        print('disable javascript: ' + str(javascript_on))
 
         # UPDATE THE DICT
-        user_settings['javascript_on_preference'] = javascript_on_preference
+        user_settings['javascript_on'] = javascript_on
 
     except:
         print('could not find that')
@@ -255,11 +256,11 @@ def toggle_images():
         # Global functions to let us work with driver from within function
         global initialised
         global driver
-        global page_images_preference
+        global images_on
 
         # Switch image preference boolean without knowing its value
         if initialised:
-            page_images_preference = not page_images_preference
+            images_on = not images_on
         msg = "Restarting the browser with updated Image display settings"
 
         # Close BUT DO NOT KILL driver so that we can update chrome options.
@@ -279,9 +280,9 @@ def toggle_images():
         # Re-get the URL
         url_button_clicked()
         print('Sent the commands to disable/enable Images')
-        print('disable images: ' + str(page_images_preference))
+        print('disable images: ' + str(images_on))
 
-        user_settings['page_images_preference'] = page_images_preference
+        user_settings['images_on'] = images_on
 
     except:
         print('could not perform the image toggle action')
@@ -369,9 +370,9 @@ def new_profile():
     # PRINT ALL INFO ON NEW PROFILE
     print("The text colour for this profile is: ", text_colour_preference)
     print("The background colour for this profile is: ", background_colour_preference)
-    print("The Javascript preference for this profile is set to: ", javascript_on_preference)
-    print("The page images preference for this profile is set to: ", page_images_preference)
-    print("The ads preference for this profile is set to: ", show_ads_preference)
+    print("The Javascript preference for this profile is set to: ", javascript_on)
+    print("The page images preference for this profile is set to: ", images_on)
+    print("The ads preference for this profile is set to: ", ads_on)
     # GET NAME OF NEW PROFILE
     profileName = profileString.get()
     print("The profile name here is: ", profileName)
@@ -382,9 +383,9 @@ def new_profile():
             "profile_name": profileName,
             "text_colour_preference": text_colour_preference,
             "background_colour_preference": background_colour_preference,
-            "javascript_on_preference": javascript_on_preference,
-            "page_images_preference": page_images_preference,
-            "show_ads_preference": show_ads_preference
+            "javascript_on": javascript_on,
+            "images_on": images_on,
+            "ads_on": ads_on
         }
         dbfile.u_settings_collection.insert_one(new_profile_doc)
 
@@ -526,7 +527,7 @@ backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + 
 backgroundColourLabel.pack(fill='x', expand=True)
 
 
-if (javascript_on_preference):
+if (javascript_on):
     jsp = "JavaScript ON"
 else:
     jsp = "JavaScript OFF"
@@ -535,7 +536,7 @@ javascriptPreferenceLabel = ttk.Label(tab2, text="JavaScript on/off preference: 
 javascriptPreferenceLabel.pack(fill='x', expand=True)
 
 
-if (page_images_preference):
+if (images_on):
     pip = "Image display ON"
 else:
     pip = "Image display OFF"
@@ -543,7 +544,7 @@ else:
 imagesPreferenceLabel = ttk.Label(tab2, text="Page images preference: " + pip)
 imagesPreferenceLabel.pack(fill='x', expand=True)
 
-if (show_ads_preference):
+if (ads_on):
     sap = "Adverts ON"
 else:
     sap = "Adverts OFF"
@@ -556,15 +557,15 @@ options = Options()
 
 def chrome_options_set():
 
-    global javascript_on_preference
-    global page_images_preference
+    global javascript_on
+    global images_on
 
-    if javascript_on_preference:
+    if javascript_on:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 1})
     else:
         options.add_experimental_option("prefs", {'profile.managed_default_content_settings.javascript': 2})
 
-    if not page_images_preference:
+    if not images_on:
         options.add_argument('--blink-settings=imagesEnabled=false')
     else:
         options.add_argument('--blink-settings=imagesEnabled=true')
