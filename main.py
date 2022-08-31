@@ -216,7 +216,7 @@ def toggle_js():
 
         # Global functions to let us work with driver from within our functions
         global initialised
-        global eference
+        global javascript_on
         global driver
 
         # Switch disablejs boolean without knowing its value
