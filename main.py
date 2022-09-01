@@ -33,7 +33,6 @@ ads_on = user_settings['ads_on']
 
 #SET STANDARD ZOOM
 zoom = 1.0
-# TODO: FIGURE OUT IF WE NEED TO SET THIS TO TRUE SOMEWHERE AFTER THIS WAS REMOVED FROM COLORISE FUNCTION
 initialised = False
 
 ## FUNCTIONS ##
@@ -43,14 +42,17 @@ print(profiles_list)
 # ALL SCRIPTS ---___---
 # START UP SCRIPTS
 def startup_init_jsimgs():
+    global initialised
     chrome_options_set()
-    #toggle_images()
+    toggle_js()
+    #initialised = True
 
 def startup_init_colorise():
     global initialised
     colour_text()
     change_bg_colour()
     initialised = True
+
 
 # PROFILE SELECITON SCRIPT
 # TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
@@ -73,17 +75,19 @@ def profile_selected(profile_name):
     images_on = user_settings['images_on']
     ads_on = user_settings['ads_on']
 
-    toggle_images()
-    colour_text()
-    change_bg_colour()
-    initialised = True
+
+    #initialised = True
+    startup_init_jsimgs()
+    if not ads_on:
+        block_adverts()
+    #startup_init_colorise()
 
 # LOAD URL FUNCTION
 def url_button_clicked():
     global initialised
     url = urlString.get()
 
-    initialised = False
+    #initialised = False
 
     #make sure URL has correct prefix
     if not url.startswith(('http://', 'https://')):
@@ -113,10 +117,13 @@ def flip_page_180():
 
 # CHANGE FONT COLOUR
 def colour_text():
+    global initialised
     global text_colour_preference
 
     # ONLY LAUNCH THE COLOUR PICKER IF THE APP IS ALREADY INITIALISED,
     # IF NOT WE WILL USE THE COLOUR VALUE PREV DEFINED AND STORED IN MONGO
+    print("Trying to figure out order")
+
     if initialised:
         text_colour_preference = change_color()
 
@@ -320,6 +327,7 @@ def display_text_content_exclusive():
 
 # BACKGROUND COLOUR CHANGER FUNCTION
 def change_bg_colour():
+    global initialised
     global background_colour_preference
 
     if initialised:
@@ -576,6 +584,7 @@ PATH = "/home/vxv/chromedriver"
 # mac path
 #PATH = "/Applications/chromedriver"
 
+print(f"Initialised value before init is {initialised}")
 startup_init_jsimgs()
 
 driver = webdriver.Chrome(
