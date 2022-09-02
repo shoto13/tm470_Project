@@ -33,6 +33,7 @@ ads_on = user_settings['ads_on']
 
 #SET STANDARD ZOOM
 zoom = 1.0
+# SET INITIALISED TO FALSE SO WE KNOW THE STATE OF THE APPLICATION
 initialised = False
 
 ## FUNCTIONS ##
@@ -52,35 +53,6 @@ def startup_init_colorise():
     colour_text()
     change_bg_colour()
     initialised = True
-
-
-# PROFILE SELECITON SCRIPT
-# TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
-def profile_selected(profile_name):
-    global user_settings
-    global initialised
-    initialised = False
-    user_settings = dbfile.u_settings_collection.find_one({"profile_name": profile_name})
-    print(user_settings)
-
-    global text_colour_preference
-    global background_colour_preference
-    global javascript_on
-    global images_on
-    global ads_on
-
-    text_colour_preference = user_settings['text_colour_preference']
-    background_colour_preference = user_settings['background_colour_preference']
-    javascript_on = user_settings['javascript_on']
-    images_on = user_settings['images_on']
-    ads_on = user_settings['ads_on']
-
-
-    #initialised = True
-    startup_init_jsimgs()
-    if not ads_on:
-        block_adverts()
-    #startup_init_colorise()
 
 # LOAD URL FUNCTION
 def url_button_clicked():
@@ -220,11 +192,12 @@ def zoom_page_out():
 # DISABLE/ENABLE JAVASCRIPT
 def toggle_js():
     try:
-
         # Global functions to let us work with driver from within our functions
         global initialised
         global javascript_on
         global driver
+
+        print(f"the initialised state at the beginning of toggle_js is {initialised}")
 
         # Switch disablejs boolean without knowing its value
         if initialised:
@@ -371,6 +344,49 @@ def change_color():
     print(colors)
     return colors
 
+# SUMMARISATION FUNCTION
+def summarise_page():
+    try:
+        elem1 = driver.find_elements(By.TAG_NAME, 'h1')
+
+        #SET UP HMTL PAGE
+        text_file = open("page_content_summary.html", "w")
+        text_file.write("<html><head></head><body>")
+        text_file.close()
+
+        text_file = open("page_content_summary.html", "a")
+
+        text_file.write("<h2>Primary page headers</h2><ul>")
+        for x in range(len(elem1)):
+            text_file.write("<li>" + elem1[x].text + "</li>")
+            print(elem1[x].text)
+        text_file.write("</ul>")
+
+        elem2 = driver.find_elements(By.TAG_NAME, 'h2')
+
+        text_file.write("<h2>Secondary page headers</h2><ul>")
+        for x in range(len(elem2)):
+            text_file.write("<li>" + elem2[x].text + "</li>")
+            print(elem2[x].text)
+        text_file.write("</ul>")
+
+        elem3 = driver.find_elements(By.TAG_NAME, 'h3')
+
+        text_file.write("<h2>Tertiary page headers</h2><ul>")
+        for x in range(len(elem3)):
+            text_file.write("<li>" + elem3[x].text + "</li>")
+            print(elem3[x].text)
+        text_file.write("</ul></body></html>")
+
+        text_file.close()
+
+        #driver.execute_script("window.open('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary.html')")
+        driver.switch_to.new_window()
+        driver.get('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary.html')
+    except:
+        print('could not download page source')
+
+
 # NEW PROFILE CREATION FUNCTION
 def new_profile():
     global profileString
@@ -410,7 +426,6 @@ def new_profile():
             title='Information',
             message=msg
         )
-
 
 # GUI SETUP
 window = tk.Tk()
@@ -478,6 +493,10 @@ downloadPageButton.pack(fill='x', expand=True, pady=8)
 textOnlyButton = ttk.Button(tab1, text="Display page text", command=display_text_content_exclusive)
 textOnlyButton.pack(fill='x', expand=True, pady=8)
 
+# SUMMARISE MAIN PAGE CONTENT
+summariseButton = ttk.Button(tab1, text="Summarise page", command=summarise_page)
+summariseButton.pack(fill='x', expand=True, pady=8)
+
 # REMOVE IMAGES
 disableImagesButton = ttk.Button(tab1, text="Toggle page images On/Off", command=toggle_images)
 disableImagesButton.pack(fill='x', expand=True, pady=8)
@@ -511,6 +530,35 @@ def change_dropdown(*args):
 # link function to change dropdown with return value set to be used as profile name
 value_in.trace('w', change_dropdown)
 
+# PROFILE SELECITON SCRIPT
+# TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
+def profile_selected(profile_name):
+    global user_settings
+    global initialised
+    initialised = False
+    user_settings = dbfile.u_settings_collection.find_one({"profile_name": profile_name})
+    print(user_settings)
+
+    global text_colour_preference
+    global background_colour_preference
+    global javascript_on
+    global images_on
+    global ads_on
+
+    text_colour_preference = user_settings['text_colour_preference']
+    background_colour_preference = user_settings['background_colour_preference']
+    javascript_on = user_settings['javascript_on']
+    images_on = user_settings['images_on']
+    ads_on = user_settings['ads_on']
+
+
+    #initialised = True
+    startup_init_jsimgs()
+    if not ads_on:
+        block_adverts()
+    #startup_init_colorise()
+
+
 #SET NEW PROFILE
 # PROFILE ENTRY INFO
 newProfileLabel = ttk.Label(tab1, text="New Profile: ")
@@ -523,7 +571,6 @@ profileNameEntry.focus()
 # PROFILE SET BUTTON
 setProfileButton = ttk.Button(tab1, text="Set New Profile", command=new_profile)
 setProfileButton.pack(fill='x', expand=True, pady=8)
-
 
 
 #TAB 2 ====!!!!====
