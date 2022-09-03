@@ -447,7 +447,11 @@ tabControl.pack(expand=1, fill="both")
 
 # SET INITIAL THEME
 style = ThemedStyle(window)
-style.theme_use('scidgreen')
+#style.theme_use('aquativo')
+#style.theme_use('plastik')
+
+style.theme_use('radiance')
+
 
 urlString = tk.StringVar()
 
