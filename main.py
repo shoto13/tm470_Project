@@ -19,6 +19,8 @@ from urllib.request import urlopen
 from ttkthemes import ThemedStyle
 from tkinter.colorchooser import askcolor
 import pymongo
+from itertools import cycle
+
 
 # GET THE USER
 user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
@@ -98,7 +100,6 @@ def colour_text():
 
     if initialised:
         text_colour_preference = change_color()
-
 
     try:
         elem1 = driver.find_element(By.TAG_NAME, 'body')
@@ -561,6 +562,7 @@ def profile_selected(profile_name):
     if not ads_on:
         block_adverts()
     #startup_init_colorise()
+    populate_settings_tab()
 
 
 #SET NEW PROFILE
@@ -578,10 +580,8 @@ setProfileButton.pack(fill='x', expand=True, pady=8)
 
 
 #TAB 2 ====!!!!====
-
 textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference)
 textColourLabel.pack(fill='x', expand=True)
-
 backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference)
 backgroundColourLabel.pack(fill='x', expand=True)
 
