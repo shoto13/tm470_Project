@@ -562,7 +562,6 @@ def profile_selected(profile_name):
     if not ads_on:
         block_adverts()
     #startup_init_colorise()
-    populate_settings_tab()
 
 
 #SET NEW PROFILE
