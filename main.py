@@ -431,29 +431,21 @@ def new_profile():
 # GUI SETUP
 window = tk.Tk()
 
-window.geometry('500x700')
+window.geometry('500x800')
 window.resizable(True, True)
 window.title('TM470 application test')
 
 # TAB DISPLAY SETUP
 tabControl = ttk.Notebook(window)
-
 tab1 = ttk.Frame(tabControl)
 tab2 = ttk.Frame(tabControl)
-
 tabControl.add(tab1, text='Controls')
 tabControl.add(tab2, text='Settings')
-
 tabControl.pack(expand=1, fill="both")
 
 # SET INITIAL THEME
 style = ThemedStyle(window)
-#style.theme_use('aquativo')
-#style.theme_use('plastik')
-
 style.theme_use('radiance')
-
-
 urlString = tk.StringVar()
 
 # TAB 1 ====!!!!!====
@@ -469,10 +461,6 @@ urlEntry.focus()
 # URL RUN BUTTON
 urlButton = ttk.Button(tab1, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=8)
-
-# # FLIP PAGE BUTTON
-# flipButton = ttk.Button(tab1, text="Flip page 180", command=flip_page_180)
-# flipButton.pack(fill='x', expand=True, pady=8)
 
 # FONT COLOUR BUTTON
 recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text)
@@ -519,21 +507,23 @@ blockAdsButton.pack(fill='x', expand=True, pady=8)
 #DROPDOWN FOR THEME DISPLAY
 profileString = tk.StringVar()
 
-value_in = tkinter.StringVar(window)
+value_in = tk.StringVar(window)
 value_in.set("Select a profile")
 
-profile_menu = tkinter.OptionMenu(window, value_in, *profiles_list)
-profile_menu.pack(fill='x', expand=True, pady=8)
+# profile_menu = tk.OptionMenu(window, value_in, *profiles_list)
+# profile_menu.pack(fill='x', expand=True, pady=8)
 
-# on change dropdown value
-def change_dropdown(*args):
+profile_menu_two = ttk.Combobox(window, textvariable=value_in, values=profiles_list, state='readonly')
+profile_menu_two.pack(fill='x', expand=True, pady=8)
+
+def change_values(*args):
     print(value_in.get())
     global user_settings
     val = value_in.get()
     profile_selected(val)
 
-# link function to change dropdown with return value set to be used as profile name
-value_in.trace('w', change_dropdown)
+value_in.trace('w', change_values)
+
 
 # PROFILE SELECITON SCRIPT
 # TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
@@ -567,21 +557,21 @@ def profile_selected(profile_name):
 #SET NEW PROFILE
 # PROFILE ENTRY INFO
 newProfileLabel = ttk.Label(tab1, text="New Profile: ")
-newProfileLabel.pack(fill='x', expand=True)
+newProfileLabel.pack(fill='x', expand=False)
 
 profileNameEntry = ttk.Entry(tab1, textvariable=profileString)
-profileNameEntry.pack(fill='x', expand=True)
+profileNameEntry.pack(fill='x', expand=False)
 profileNameEntry.focus()
 
 # PROFILE SET BUTTON
 setProfileButton = ttk.Button(tab1, text="Set New Profile", command=new_profile)
-setProfileButton.pack(fill='x', expand=True, pady=8)
+setProfileButton.pack(fill='x', expand=False, pady=8)
 
 
 #TAB 2 ====!!!!====
-textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference)
+textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference, foreground=text_colour_preference)
 textColourLabel.pack(fill='x', expand=True)
-backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference)
+backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference, foreground=background_colour_preference)
 backgroundColourLabel.pack(fill='x', expand=True)
 
 
