@@ -27,6 +27,7 @@ class CustomDictionary (dict):
     def __setitem__(self, item, value):
         print(f"the value of {item} has been changed to {value}")
         super(CustomDictionary, self).__setitem__(item, value)
+        update_label()
 
 ## FUNCTIONS ##
 # GET THE USER
@@ -178,8 +179,11 @@ def colour_text():
     except:
         print('could not find that element')
 
+
     #UPDATE THE DICT
+    print("text colour old is :" + user_settings['text_colour_preference'])
     user_settings['text_colour_preference'] = text_colour_preference
+    print("text colour new is: " + user_settings['text_colour_preference'])
 
 # ZOOM PAGE
 def zoom_page():
@@ -479,10 +483,11 @@ window.title('TM470 application test')
 # TAB DISPLAY SETUP
 tabControl = ttk.Notebook(window)
 tab1 = ttk.Frame(tabControl)
-tab2 = ttk.Frame(tabControl)
 tabControl.add(tab1, text='Controls')
-tabControl.add(tab2, text='Settings')
+#tabControl.add(tab2, text='Settings')
 tabControl.pack(expand=1, fill="both")
+tab2 = ttk.Frame(tabControl)
+tabControl.add(tab2, text='Settings')
 
 # SET INITIAL THEME
 style = ThemedStyle(window)
@@ -586,13 +591,16 @@ def profile_selected(profile_name):
     javascript_on = user_settings['javascript_on']
     images_on = user_settings['images_on']
     ads_on = user_settings['ads_on']
+    #TODO get the profile name to show at the top of tab2
 
 
     #initialised = True
     startup_init_jsimgs()
     if not ads_on:
         block_adverts()
+    update_label()
     #startup_init_colorise()
+
 
 
 #SET NEW PROFILE
@@ -609,17 +617,19 @@ setProfileButton = ttk.Button(tab1, text="Set New Profile", command=new_profile)
 setProfileButton.pack(fill='x', expand=False, pady=8)
 
 
-#TAB 2 ====!!!!====
+
+    # TAB 2 ====!!!!====
 profileNameLabel = ttk.Label(tab2, text="Currently selected profile: " + profile_name)
 profileNameLabel.pack(fill='x', expand=True)
 
-# TAB 2 LABEL DECLARATIONS ---
-textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference, foreground=text_colour_preference)
+    # TAB 2 LABEL DECLARATIONS ---
+
+textColourLabel = ttk.Label(tab2, text=text_colour_preference, foreground=text_colour_preference)
 textColourLabel.pack(fill='x', expand=True)
 backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference, foreground=background_colour_preference)
 backgroundColourLabel.pack(fill='x', expand=True)
 
-# TAB 2 SETTINGS DECLARATIONS ---
+    # TAB 2 SETTINGS DECLARATIONS ---
 if (javascript_on):
     jsp = "JavaScript ON"
 else:
@@ -627,7 +637,6 @@ else:
 
 javascriptPreferenceLabel = ttk.Label(tab2, text="JavaScript on/off preference: " + jsp)
 javascriptPreferenceLabel.pack(fill='x', expand=True)
-
 
 if (images_on):
     pip = "Image display ON"
@@ -644,6 +653,28 @@ else:
 
 adsPreferenceLabel = ttk.Label(tab2, text="Ad display preference: " + sap)
 adsPreferenceLabel.pack(fill='x', expand=True)
+
+
+def update_label():
+    global textColourLabel
+    global backgroundColourLabel
+    global profileNameLabel
+    global adsPreferenceLabel
+    global imagesPreferenceLabel
+    global javascriptPreferenceLabel
+
+    global background_colour_preference
+    global text_colour_preference
+    global profile_name
+
+    tc_preference = "text colour preference: " + text_colour_preference
+    bc_preference = "background colour preference: " + background_colour_preference
+
+    textColourLabel["text"] =  tc_preference
+    textColourLabel["foreground"] = text_colour_preference
+    backgroundColourLabel["text"] = bc_preference
+    backgroundColourLabel["foreground"] = background_colour_preference
+    profileNameLabel["text"] = profile_name
 
 
 options = Options()
