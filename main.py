@@ -21,13 +21,23 @@ from tkinter.colorchooser import askcolor
 import pymongo
 from itertools import cycle
 
+# CREATION OF SPECIAL DICTIONARY CLASS
+# This is to allow us to take an action any time a value in the dict changes
+class CustomDictionary (dict):
+    def __setitem__(self, item, value):
+        print(f"the value of {item} has been changed to {value}")
+        super(CustomDictionary, self).__setitem__(item, value)
 
+## FUNCTIONS ##
 # GET THE USER
 user_settings = dbfile.u_settings_collection.find_one({"username": "test_user"})
 print(user_settings)
 
+user_settings = CustomDictionary(user_settings)
+
 # USER DEFINED SETTINGS
 text_colour_preference = user_settings['text_colour_preference']
+profile_name = user_settings['profile_name']
 background_colour_preference = user_settings['background_colour_preference']
 javascript_on = user_settings['javascript_on']
 images_on = user_settings['images_on']
@@ -38,7 +48,6 @@ zoom = 1.0
 # SET INITIALISED TO FALSE SO WE KNOW THE STATE OF THE APPLICATION
 initialised = False
 
-## FUNCTIONS ##
 profiles_list = dbfile.u_settings_collection.distinct("profile_name")
 print(profiles_list)
 
@@ -310,14 +319,47 @@ def change_bg_colour():
     try:
         elem1 = driver.find_element(By.CSS_SELECTOR, 'body')
         driver.execute_script("arguments[0].style.backgroundColor ='{}';".format(background_colour_preference), elem1)
-        print("That seems to have worked to be honest")
+        print("Body element correctly recoloured")
 
     except:
-        print("That didn't work at all")
+        print("Background element could not be correctly located/re-coloured")
 
+    try:
+        elem = driver.find_elements(By.TAG_NAME, 'div')
+        for element in elem:
+            driver.execute_script('arguments[0].style.backgroundColor="{}";'.format(background_colour_preference), element)
+        print("Found <%s> element with that class name!" % (elem.tag_name))
+    except:
+        print('div items could not be correctly located/re-coloured')
+
+    try:
+        elem = driver.find_elements(By.TAG_NAME, 'h2')
+        for element in elem:
+            driver.execute_script('arguments[0].style.backgroundColor="{}";'.format(background_colour_preference), element)
+        print("Found <%s> element with that class name!" % (elem.tag_name))
+    except:
+        print('h2 items could not be correctly located/re-coloured')
+
+    try:
+        elem = driver.find_elements(By.TAG_NAME, 'h3')
+        for element in elem:
+            driver.execute_script('arguments[0].style.backgroundColor="{}";'.format(background_colour_preference), element)
+        print("Found <%s> element with that class name!" % (elem.tag_name))
+    except:
+        print('h3 items could not be correctly located/re-coloured')
+
+    try:
+        elem = driver.find_elements(By.TAG_NAME, 'h1')
+        for element in elem:
+            driver.execute_script('arguments[0].style.backgroundColor="{}";'.format(background_colour_preference), element)
+        print("Found <%s> element with that class name!" % (elem.tag_name))
+    except:
+        print('h1 items could not be correctly located/re-coloured')
 
     #UPDATE THE DICT
+    print("background colour old is :" + user_settings['background_colour_preference'])
     user_settings['background_colour_preference'] = background_colour_preference
+    print("background colour new is: " + user_settings['background_colour_preference'])
 
 # AD BLOCKER FUNCTION
 def block_adverts():
@@ -386,7 +428,6 @@ def summarise_page():
         driver.get('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary.html')
     except:
         print('could not download page source')
-
 
 # NEW PROFILE CREATION FUNCTION
 def new_profile():
@@ -569,12 +610,16 @@ setProfileButton.pack(fill='x', expand=False, pady=8)
 
 
 #TAB 2 ====!!!!====
+profileNameLabel = ttk.Label(tab2, text="Currently selected profile: " + profile_name)
+profileNameLabel.pack(fill='x', expand=True)
+
+# TAB 2 LABEL DECLARATIONS ---
 textColourLabel = ttk.Label(tab2, text="Text colour preference: " + text_colour_preference, foreground=text_colour_preference)
 textColourLabel.pack(fill='x', expand=True)
 backgroundColourLabel = ttk.Label(tab2, text="Background colour preference: " + background_colour_preference, foreground=background_colour_preference)
 backgroundColourLabel.pack(fill='x', expand=True)
 
-
+# TAB 2 SETTINGS DECLARATIONS ---
 if (javascript_on):
     jsp = "JavaScript ON"
 else:
