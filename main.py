@@ -38,7 +38,7 @@ user_settings = CustomDictionary(user_settings)
 
 # USER DEFINED SETTINGS
 text_colour_preference = user_settings['text_colour_preference']
-profile_name = user_settings['profile_name']
+name_of_profile = user_settings['profile_name']
 background_colour_preference = user_settings['background_colour_preference']
 javascript_on = user_settings['javascript_on']
 images_on = user_settings['images_on']
@@ -576,9 +576,11 @@ value_in.trace('w', change_values)
 def profile_selected(profile_name):
     global user_settings
     global initialised
+    global name_of_profile
     initialised = False
     user_settings = dbfile.u_settings_collection.find_one({"profile_name": profile_name})
     print(user_settings)
+    user_settings = CustomDictionary(user_settings)
 
     global text_colour_preference
     global background_colour_preference
@@ -591,6 +593,8 @@ def profile_selected(profile_name):
     javascript_on = user_settings['javascript_on']
     images_on = user_settings['images_on']
     ads_on = user_settings['ads_on']
+    name_of_profile = user_settings['profile_name']
+
     #TODO get the profile name to show at the top of tab2
 
 
@@ -600,7 +604,6 @@ def profile_selected(profile_name):
         block_adverts()
     update_label()
     #startup_init_colorise()
-
 
 
 #SET NEW PROFILE
@@ -619,7 +622,7 @@ setProfileButton.pack(fill='x', expand=False, pady=8)
 
 
     # TAB 2 ====!!!!====
-profileNameLabel = ttk.Label(tab2, text="Currently selected profile: " + profile_name)
+profileNameLabel = ttk.Label(tab2, text="Currently selected profile: " + name_of_profile)
 profileNameLabel.pack(fill='x', expand=True)
 
     # TAB 2 LABEL DECLARATIONS ---
@@ -654,7 +657,6 @@ else:
 adsPreferenceLabel = ttk.Label(tab2, text="Ad display preference: " + sap)
 adsPreferenceLabel.pack(fill='x', expand=True)
 
-
 def update_label():
     global textColourLabel
     global backgroundColourLabel
@@ -666,6 +668,10 @@ def update_label():
     global background_colour_preference
     global text_colour_preference
     global profile_name
+    global name_of_profile
+    global ads_on
+    global images_on
+    global javascript_on
 
     tc_preference = "text colour preference: " + text_colour_preference
     bc_preference = "background colour preference: " + background_colour_preference
@@ -674,7 +680,22 @@ def update_label():
     textColourLabel["foreground"] = text_colour_preference
     backgroundColourLabel["text"] = bc_preference
     backgroundColourLabel["foreground"] = background_colour_preference
-    profileNameLabel["text"] = profile_name
+    profileNameLabel["text"] = name_of_profile
+
+    if (javascript_on):
+        javascriptPreferenceLabel = "JavaScript ON"
+    else:
+        javascriptPreferenceLabel = "JavaScript OFF"
+
+    if (images_on):
+        imagesPreferenceLabel = "Image display ON"
+    else:
+        imagesPreferenceLabel = "Image display OFF"
+
+    if (ads_on):
+        adsPreferenceLabel = "Ads ON"
+    else:
+        adsPreferenceLabel = "Ads OFF"
 
 
 options = Options()
