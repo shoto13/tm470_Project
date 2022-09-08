@@ -72,7 +72,6 @@ def url_button_clicked():
     url = urlString.get()
 
     #initialised = False
-
     #make sure URL has correct prefix
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + urlString.get()
@@ -437,7 +436,7 @@ def summarise_page():
 def new_profile():
     global profileString
 
-    # PRINT ALL INFO ON NEW PROFILE
+    # PRINT ALL INFO ON NEW PROFILE TO CHECK FOR CORRECT FUNCTIONING
     print("The text colour for this profile is: ", text_colour_preference)
     print("The background colour for this profile is: ", background_colour_preference)
     print("The Javascript preference for this profile is set to: ", javascript_on)
@@ -445,8 +444,8 @@ def new_profile():
     print("The ads preference for this profile is set to: ", ads_on)
     # GET NAME OF NEW PROFILE
     profileName = profileString.get()
-    print("The profile name here is: ", profileName)
 
+    # ADD THIS PROFILE DOCUMENT TO THE DATABASE IF THE PROFILE NAME ENTRY IS NOT EMPTY
     if profileName:
         new_profile_doc = {
             "username": "test_user",
@@ -460,14 +459,12 @@ def new_profile():
         dbfile.u_settings_collection.insert_one(new_profile_doc)
 
         msg = f'Your profile: {profileName} has been saved.'
-
         showinfo(
             title='Information',
             message=msg
         )
     else:
         msg = 'Please enter a profile name to save a new profile'
-
         showinfo(
             title='Information',
             message=msg
@@ -508,10 +505,6 @@ urlEntry.focus()
 urlButton = ttk.Button(tab1, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=8)
 
-# FONT COLOUR BUTTON
-recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text)
-recolourButton.pack(fill='x', expand=True, pady=8)
-
 # ZOOM PAGE IN
 resizeButton = ttk.Button(tab1, text="Zoom page in", command=zoom_page)
 resizeButton.pack(fill='x', expand=True, pady=8)
@@ -520,9 +513,25 @@ resizeButton.pack(fill='x', expand=True, pady=8)
 resizeButton = ttk.Button(tab1, text="Zoom page out", command=zoom_page_out)
 resizeButton.pack(fill='x', expand=True, pady=8)
 
+# FONT COLOUR BUTTON
+recolourButton = ttk.Button(tab1, text="Recolour text", command=colour_text)
+recolourButton.pack(fill='x', expand=True, pady=8)
+
+# CHANGE BACKGROUND COLOURS
+changeBackgroundButton = ttk.Button(tab1, text="Change Background colour", command=change_bg_colour)
+changeBackgroundButton.pack(fill='x', expand=True, pady=8)
+
 # DISABLE JS BUTTON
 toggleJsButton = ttk.Button(tab1, text="Toggle JavaScript On/Off", command=toggle_js)
 toggleJsButton.pack(fill='x', expand=True, pady=8)
+
+# REMOVE IMAGES
+disableImagesButton = ttk.Button(tab1, text="Toggle page images On/Off", command=toggle_images)
+disableImagesButton.pack(fill='x', expand=True, pady=8)
+
+# BLOCK ADVERTS
+blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
+blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 # DOWNLOAD PAGE TO FILE
 downloadPageButton = ttk.Button(tab1, text="Download page source", command=dl_page_source)
@@ -535,18 +544,6 @@ textOnlyButton.pack(fill='x', expand=True, pady=8)
 # SUMMARISE MAIN PAGE CONTENT
 summariseButton = ttk.Button(tab1, text="Summarise page", command=summarise_page)
 summariseButton.pack(fill='x', expand=True, pady=8)
-
-# REMOVE IMAGES
-disableImagesButton = ttk.Button(tab1, text="Toggle page images On/Off", command=toggle_images)
-disableImagesButton.pack(fill='x', expand=True, pady=8)
-
-# CHANGE BACKGROUND COLOURS
-changeBackgroundButton = ttk.Button(tab1, text="Change Background colour", command=change_bg_colour)
-changeBackgroundButton.pack(fill='x', expand=True, pady=8)
-
-# BLOCK ADVERTS
-blockAdsButton = ttk.Button(tab1, text="Block Adverts", command=block_adverts)
-blockAdsButton.pack(fill='x', expand=True, pady=8)
 
 
 #PROFILE SETTINGS
