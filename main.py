@@ -500,7 +500,6 @@ urlEntry = ttk.Entry(tab1, textvariable=urlString)
 urlEntry.pack(fill='x', expand=True)
 urlEntry.focus()
 
-
 # URL RUN BUTTON
 urlButton = ttk.Button(tab1, text="Get Page", command=url_button_clicked)
 urlButton.pack(fill='x', expand=True, pady=8)
@@ -545,16 +544,12 @@ textOnlyButton.pack(fill='x', expand=True, pady=8)
 summariseButton = ttk.Button(tab1, text="Summarise page", command=summarise_page)
 summariseButton.pack(fill='x', expand=True, pady=8)
 
-
 #PROFILE SETTINGS
 #DROPDOWN FOR THEME DISPLAY
 profileString = tk.StringVar()
 
 value_in = tk.StringVar(window)
 value_in.set("Select a profile")
-
-# profile_menu = tk.OptionMenu(window, value_in, *profiles_list)
-# profile_menu.pack(fill='x', expand=True, pady=8)
 
 profile_menu_two = ttk.Combobox(window, textvariable=value_in, values=profiles_list, state='readonly')
 profile_menu_two.pack(fill='x', expand=True, pady=8)
@@ -567,8 +562,7 @@ def change_values(*args):
 
 value_in.trace('w', change_values)
 
-
-# PROFILE SELECITON SCRIPT
+# PROFILE SELECTION SCRIPT
 # TODO: refactor preferences so we do not store them in strings and so that we are not repeating ourselves below.
 def profile_selected(profile_name):
     global user_settings
@@ -594,14 +588,12 @@ def profile_selected(profile_name):
 
     #TODO get the profile name to show at the top of tab2
 
-
     #initialised = True
     startup_init_jsimgs()
     if not ads_on:
         block_adverts()
     update_label()
     #startup_init_colorise()
-
 
 #SET NEW PROFILE
 # PROFILE ENTRY INFO
@@ -615,8 +607,6 @@ profileNameEntry.focus()
 # PROFILE SET BUTTON
 setProfileButton = ttk.Button(tab1, text="Set New Profile", command=new_profile)
 setProfileButton.pack(fill='x', expand=False, pady=8)
-
-
 
     # TAB 2 ====!!!!====
 profileNameLabel = ttk.Label(tab2, text="Currently selected profile: " + name_of_profile)
