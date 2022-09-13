@@ -393,42 +393,35 @@ def change_color():
 # SUMMARISATION FUNCTION
 def summarise_page():
     try:
-        elem1 = driver.find_elements(By.TAG_NAME, 'h1')
+        tags_to_summarise = ["h1", "h2", "h3"]
 
-        #SET UP HMTL PAGE
-        text_file = open("page_content_summary.html", "w")
-        text_file.write("<html><head></head><body>")
-        text_file.close()
+        text_file2 = open("page_content_summary_2.html", "w")
+        text_file2.write("<html><head></head><body>")
+        text_file2.close()
+        text_file2 = open("page_content_summary_2.html", "a")
 
-        text_file = open("page_content_summary.html", "a")
+        for item in tags_to_summarise:
+            elem = driver.find_elements(By.TAG_NAME, item)
+            header_name = ""
+            if item == "h1":
+                header_name = "Primary page headers"
+            elif item == "h2":
+                header_name = "Secondary page headers"
+            else:
+                header_name = "Tertiary page headers"
 
-        text_file.write("<h2>Primary page headers</h2><ul>")
-        for x in range(len(elem1)):
-            text_file.write("<li>" + elem1[x].text + "</li>")
-            print(elem1[x].text)
-        text_file.write("</ul>")
+            text_file2.write("<h2>" + header_name + "</h2><ul>")
+            for x in range(len(elem)):
+                text_file2.write("<li>" + elem[x].text + "</li>")
+            text_file2.write("</ul>")
 
-        elem2 = driver.find_elements(By.TAG_NAME, 'h2')
+        text_file2.write("</body></html>")
+        text_file2.close()
 
-        text_file.write("<h2>Secondary page headers</h2><ul>")
-        for x in range(len(elem2)):
-            text_file.write("<li>" + elem2[x].text + "</li>")
-            print(elem2[x].text)
-        text_file.write("</ul>")
-
-        elem3 = driver.find_elements(By.TAG_NAME, 'h3')
-
-        text_file.write("<h2>Tertiary page headers</h2><ul>")
-        for x in range(len(elem3)):
-            text_file.write("<li>" + elem3[x].text + "</li>")
-            print(elem3[x].text)
-        text_file.write("</ul></body></html>")
-
-        text_file.close()
 
         #driver.execute_script("window.open('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary.html')")
         driver.switch_to.new_window()
-        driver.get('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary.html')
+        driver.get('file:///home/vxv/PycharmProjects/tm470_Project/page_content_summary_2.html')
     except:
         print('could not download page source')
 
